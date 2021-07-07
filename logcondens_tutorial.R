@@ -1,0 +1,17 @@
+library("logcondens")
+set.seed(1)
+n.sim <- 40
+x.sim <-sort(rnorm(n.sim))
+res <- logConDens(x.sim, smoothed = FALSE, print = FALSE)
+res
+xs <- seq(-5, 5, by = 0.01)
+f.true <- dnorm(xs)
+par(las = 1, oma = c(0, 0, 3, 0), mar = c(3, 3.5, 0.5, 0.5),mfrow = c(1, 2))
+plot(res, which = "density", add.title = FALSE, legend.pos = "none")
+title(main = "Log-concave density estimation from i.i.d. data",outer = TRUE)
+mtext("Dashed vertical lines indicate knots of the log-density", 3,outer = TRUE)
+lines(xs, f.true, col = 4, lwd = 2)
+lines(density(x.sim), lwd = 2)
+legend("topleft", c("Kernel", "Estimated", "True"), lty = 1, lwd = 2,col = c(1, 2, 4), bty = "n")
+plot(res, which = "log-density", add.title = FALSE, legend.pos = "none")
+lines(xs, log(f.true), col = 4, lwd = 2)
