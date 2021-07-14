@@ -1,0 +1,18 @@
+export(fmlcd)
+export(fmlcdEM)
+export(compilationInfo)
+export(paramFitKernelDensity)
+export(paramFitGammaOne)
+export(correctIntegral)
+export(calcCvxHullFaces)
+
+importFrom("stats", "runif", "sd", "var")
+
+import(
+	geometry,
+	MASS,
+	mclust,
+	mvtnorm
+)
+
+useDynLib(fmlogcondens, .registration = TRUE)
