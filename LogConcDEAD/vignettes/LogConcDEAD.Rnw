@@ -1,0 +1,941 @@
+\documentclass[article, shortnames, nojss]{jss}
+
+\usepackage{amsmath, amsthm, amssymb, amscd, ifthen, subfigure, psfrag}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\floatpagefraction}{0.35}
+\usepackage{afterpage}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% declarations for jss.cls %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\VignetteIndexEntry{a guide to the LogConcDEAD package}                                          
+%\VignetteKeywords{LogConcDEAD}                                                 
+%\VignetteDepends{LogConcDEAD, rgl, MASS, mvtnorm}                  
+%\VignettePackage{LogConcDEAD} 
+
+%% almost as usual
+\author{Madeleine Cule, Robert Gramacy and Richard Samworth\\
+University of Cambridge}
+\title{\pkg{LogConcDEAD}: An \proglang{R} Package for Maximum Likelihood
+  Estimation of a Multivariate Log-Concave Density}
+
+%% for pretty printing and a nice hypersummary also set:
+\Plainauthor{Madeleine Cule, Robert Gramacy, Richard
+  Samworth} %% comma-separated
+\Plaintitle{LogConcDEAD: An R Package for Maximum Likelihood Estimation of
+  a Multivariate Log-Concave Density} %% without formatting
+\Shorttitle{\pkg{LogConcDEAD}: Multivariate Log-Concave Density Estimation} %% a short title (if necessary)
+
+%% an abstract and keywords
+\Abstract{In this document we introduce the \proglang{R} package
+  \pkg{LogConcDEAD} (Log-concave density estimation in arbitrary
+  dimensions).  Its main function is to compute the nonparametric
+  maximum likelihood estimator of a log-concave density.  Functions
+  for plotting, sampling from the density estimate and evaluating the
+  density estimate are provided.  All of the functions available in
+  the package are illustrated using simple, reproducible examples with
+  simulated data.}  \Keywords{log-concave density, multivariate
+  density estimation, visualization, nonparametric statistics}
+\Plainkeywords{log-concave density, multivariate density estimation,
+  visualization, nonparametric statistics}
+
+\Address{
+  Madeleine Cule, Robert Gramacy, Richard Samworth\\
+  Statistical Laboratory\\
+  Centre for Mathematical Sciences\\
+  Wilberforce Road\\
+  Cambridge CB3 0WG\\
+  E-mail: \email{\{mlc40,bobby,rjs57\}@statslab.cam.ac.uk}\\
+  URL: \url{http://www.statslab.cam.ac.uk/~{mlc40,bobby,rjs57}}
+}
+
+%% end of declarations %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%My handy macros:
+
+%KL divergence
+\newcommand{\dkl}[2]{d_{KL}(#1 | #2)}
+%Hellinger distance
+\newcommand{\dhell}[2]{d_h(#1,#2)}
+
+%Various stuff for proofs
+\newcommand{\st}{\textrm{ subject to }}
+\newcommand{\rarrow}{\rightarrow}
+\newcommand{\convp}{\stackrel{p}{\rightarrow}}
+\newcommand{\convas}{\stackrel{\textit{a.s.}}{\rightarrow}}
+\newcommand{\convd}{\stackrel{d}{\rightarrow}}
+\newcommand{\real}[1]{\mathbb{R}^{#1}}
+\newcommand{\rn}{\mathbb{R}^n}
+\newcommand{\rd}{\mathbb{R}^d}
+\newcommand{\rk}{\mathbb{R}^k}
+\newcommand{\epi}{\textrm{epi }}
+\newcommand{\cl}{\textrm{cl }}
+\newcommand{\conv}{\textrm{conv }}
+\newcommand{\dom}{\textrm{dom }}
+\newcommand{\supp}{\textrm{supp }}
+
+%I prefer wide bars, hats etc and varphi
+\renewcommand{\phi}{\varphi}
+\renewcommand{\hat}{\widehat}
+\renewcommand{\tilde}{\widetilde}
+
+%various useful quantities
+\newcommand{\emp}{P_n}
+\newcommand{\est}{\hat{p}_n}
+\newcommand{\true}{p_0}
+\newcommand{\maxlike}{\max \prod_{i=1}^n p(X_i)}
+\newcommand{\hbary}{\bar{h}_y}
+\newcommand{\hty}{h^{\mathcal{T}}_y}
+\newcommand{\myintegral}{\int_{C_n} \exp\{\hbary(x)\} \, dx}
+\newcommand{\kt}{\mathcal{K}^{\mathcal{T}}}
+\newcommand{\sigt}{\sigma^{\mathcal{T}}}
+\newcommand{\new}{\textrm{new}}
+\newcommand{\va}{\mathcal{V}(\mathcal{A})}
+
+%%%  Theorem style I like
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{cor}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{eg}[theorem]{Example}
+
+%\theoremstyle{remark}
+\newtheorem{assump}[theorem]{Assumption}
+
+%some mathcals and mathbbs
+\renewcommand{\AA}{\mathcal{A}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\KK}{\mathcal{K}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\FF}{\mathcal{F}}
+
+
+%%Here is where the actual document begins:
+\begin{document}
+
+<<eval=TRUE,echo=FALSE,include=FALSE>>=
+options(prompt="R> ")
+require( "LogConcDEAD" )
+require( "mvtnorm" )
+options(width=72)
+@ 
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{About this document}
+\label{sec:about}
+This document is an introduction to the \proglang{R} package
+\pkg{LogConcDEAD} (log-concave density estimation in arbitrary
+dimensions) based on \citet{CGS2008}. It aims to provide a detailed user guide based on simple,
+reproducible worked examples.  This package is available from the
+Comprehensive \proglang{R} Archive Network at
+\url{http://CRAN.R-project.org/package=LogConcDEAD}.
+
+\pkg{LogConcDEAD} depends on \pkg{MASS} \citep{MASS2002} for some
+vector operations and \pkg{geometry} \citep{GramacyGrasman2008} for
+convex hull computation.  The package \pkg{rgl}
+\citep{AdlerMurdoch2007} is recommended for producing graphics.
+
+This document was created using \code{Sweave} \citep{Sweave} and
+\LaTeX{} \citep{Lamport1994} using \proglang{R} \citep{R}.  This means
+that all of the code has been checked by \proglang{R}, and can be
+reproduced exactly by setting an appropriate seed (as given at the
+beginning of each example), or tested on different examples by using a
+different seed.  
+
+\subsection{Log-concave density estimation}
+\label{sec:probintro}
+We address the fundamental statistical
+problem of estimating a probability density function $f_0$ from independent 
+and identically distributed observations $X_1, \ldots, X_n$ taking 
+values in $\mathbb{R}^d$. 
+
+If a suitable parametric model is available, a common method is to use
+maximum likelihood to estimate the parameters of the model.
+Otherwise, a standard nonparametric approach is based on kernel
+density estimation \citep{WandJones1995}, which has been implemented
+in the \proglang{R} function \code{density}.  In common with many
+nonparametric methods, kernel density estimation requires the careful
+specification of a smoothing parameter.  For multivariate data, the
+smoothing parameter is a bandwidth matrix with up to $\frac{1}{2}d(d+1)$
+entries to choose, meaning that this method can 
+be especially difficult to apply in practice.
+
+An alternative to kernel density estimation or other estimation techniques
+based on smoothing (all of which require the selection of a smoothing
+parameter, which is nontrivial especially in the multivariate case) is
+to impose some qualitative shape restrictions on the density.  If the
+shape restrictions are suitable, there is enough structure to
+guarantee the existence of a unique and fully automatic maximum
+likelihood estimate, even though the class of densities may be
+infinite-dimensional.  This therefore avoids both the restrictions of
+a parametric model and the difficulty of bandwidth selection in kernel
+density estimation.  The price is some restriction on the shape of the
+density.  However, these restrictions are less severe than those
+imposed by a parametric model.
+
+Shape-constrained maximum likelihood dates back to
+\citet{Grenander1956}, who treated monotone densities in the context
+of mortality data.  Recently there has been considerable interest in
+alternative shape constraints, including convexity, $k$-monotonicity
+and log-concavity \citep{GJW2001, DuembgenRufibach2009,
+  BalabdaouiWellner2007}.  However, these works have all focused on the 
+case of univariate data.
+
+\subsubsection{Log-concave densities}
+ A function $g \colon \RR^d \rightarrow
+[-\infty, \infty)$ is
+concave if 
+\[g( \lambda x + (1 - \lambda) y) \geq \lambda g(x) + (1-\lambda)g(y)\]
+for all $x, y \in \RR^d$ and $\lambda \in (0,1)$.  This corresponds to
+what \citet{Rockafellar1997} calls a proper concave function.  
+We say a probability density function $f$ is log-concave if $\log f$
+is a concave function. 
+Several common parametric families of
+univariate densities are log-concave, such as Gaussian, logistic and
+Gumbel densities, as well as Weibull, Gamma and Beta densities for
+certain parameter values \citep{An1998}.  In fact, \citet{CSS2010}
+showed that even though the class of multivariate log-concave
+densities is large (infinite-dimensional), it still retains some of
+the simple and attractive properties of the class of Gaussian
+densities.
+
+One-dimensional log-concave density estimation via maximum likelihood
+is discussed in \citet{DuembgenRufibach2009}; computational aspects are
+treated in \citet{Rufibach2007}.  It is in the multivariate case,
+however, where kernel density estimation is more difficult and
+parametric models less obvious, where a log-concave model may be most
+useful.  
+
+Theoretical and computational aspects of multivariate log-concave
+density estimation are treated in \citet{CSS2010}. In particular, it
+is proved that if $Y_1, \ldots, Y_m$ are (distinct) independent and
+identically distributed observations from a distribution with
+log-concave density $f_0$ on $\rd$, then (with probability $1$) there is a
+unique log-concave density $\hat{f}_m$ satisfying 
+\begin{equation}
+  \label{eq:maxlike}
+  \hat{f}_m = \argmax_{f \in \FF} \frac{1}{m} \sum_{i=1}^m \log f(Y_i),
+\end{equation}
+where $\FF$
+is the class of all log-concave densities on $\rd$.  Further, it is shown that
+this infinite dimensional maximization problem can be reduced to that
+of maximizing over functions of the form $\hbary$ for some $y =
+(y_1,\ldots,y_m) \in \RR^m$, where 
+\begin{equation}
+  \label{eq:hbary}
+  \bar{h}_y(x) = \inf \{h(x) \colon h
+\textrm{ is concave},\; h(Y_i) \geq y_i,\; i = 1, \ldots, m\}.
+\end{equation}
+As discussed in \citet{CSS2010}, we may think of $\hbary$ as the
+function obtained by placing a pole of height $y_i$ at $X_i$ and
+stretching a rubber sheet over the top of the poles. 
+
+Therefore, to completely specify the maximum likelihood estimator, we
+need only specify a suitable vector $\hat{y} \in \RR^m$, as this
+defines the entire function $\bar{h}_{\hat{y}}$.  A main feature of
+the \pkg{LogConcDEAD} package is that it provides an iterative
+algorithm for finding such an appropriate vector $\hat{y}$.
+
+From our knowledge of the structure of functions of the form \eqref{eq:hbary},
+we may deduce some additional properties of $\hat{f}_m$.  It is zero
+outside the convex hull of the data, and strictly positive inside
+the convex hull.  Moreover, we can find a triangulation of the convex hull into simplices (triangles when $d=2$, tetrahedra when $d=3$, and
+so on) such that $\log \hat{f}_m$ is affine on each simplex \citep{Rockafellar1997}.
+
+In practice our observations will be made only to a finite precision,
+so the observations will not necessarily be distinct.  However, the
+same method of proof shows that, more generally, if $X_1, \ldots, X_n$
+are distinct points in $\rd$ and $w_1, \ldots, w_n$ are strictly
+positive weights satisfying $\sum_{i=1}^n w_i = 1$, then there is a
+unique log-concave density $\hat{f}_n$, which is of the form $\hat{f}_n =
+\exp(\bar{h}_y)$ for some $y \in \rn$, and which satisfies
+\begin{equation}\label{eq:weights}
+  \hat{f}_n = \argmax_{f \in \FF} \sum_{i=1}^n w_i \log f(X_i).
+\end{equation}
+The default case $w_i = \frac{1}{n}$ corresponds to the situation
+described above, and is appropriate for most situations. However, the
+generalization \eqref{eq:weights} obtained by allowing $w_i \neq
+\frac{1}{n}$ allows us to extend to binned
+observations.  In more detail, if $Y_1, \ldots, Y_m$ are independent
+and identically distributed according to a density $f_0$, and distinct
+binned values $X_1, \ldots, X_n$ are observed, we may construct a
+maximum likelihood problem of the form given in~(\ref{eq:weights}),
+setting
+\[w_i = \frac{\# \text{ of times value }X_i\text{ is observed}}{m}\]
+and 
+\[\hat{f}_n = \argmax_{f \in \FF} \sum_{i=1}^n w_i \log f(X_i).\]
+
+This generalization may also be used for a multivariate version of a
+log-concave EM algorithm (\citealp{ChangWalther2007}, also discussed in \citealp{CSS2010}).
+
+\subsection{Outline of the remainder of this document}
+\label{sec:outline}
+
+In Section \ref{sec:alg}, we outline the algorithm used to
+compute the maximum likelihood estimator, including various parameters
+used in the computation.  This is essentially an adaptation of Shor's
+$r$-algorithm \citep{Shor1985} (implemented as \pkg{SolvOpt} by
+\citet{KappelKuntsevich2000}), and depends on the \pkg{Quickhull}
+algorithm for computing convex hulls \citep{BDH1996}.  
+This section may be skipped on first reading.
+
+
+In Section \ref{sec:usage}, we demonstrate the main features of the package 
+through four simple examples (one with $d=1$,
+two with $d=2$ and one with $d=3$).  This section includes a
+description of all of the parameters used, as well as the output
+structures.  We also introduce the plotting functions available, 
+as well as functions for sampling from the density estimate and 
+for evaluating the density at a particular point.
+
+
+
+\section{Algorithm}
+\label{sec:alg}
+\subsection{Introduction}
+\label{sec:algintro}
+
+Recall that the maximum likelihood estimator $\hat{f}_n$ of $f_0$ 
+may be completely specified by its values at the observations 
+$X_1, \ldots, X_n$.  Writing $C_n$ for the convex hull of the data, \citet{CSS2010} showed that the problem of 
+computing the estimator may be rephrased as one of finding   
+\[\argmin_{y \in \rn} \sigma(y) = - \sum_{i=1}^n w_i y_i +
+\myintegral\] for suitable chosen weights $w_i$, where
+\[\bar{h}_y(x) = \inf \{h(x): h \textrm{ is concave}, h(X_i) \geq y_i, i
+= 1, \ldots, n\}.\]
+
+The function $\sigma$ is convex, but not differentiable, so standard
+gradient-based convex optimization techniques such as Newton's method
+are not suitable.  Nevertheless, the notion of a subgradient is still
+valid: a subgradient at $y$ of $\sigma$ is any direction which defines
+a supporting hyperplane to $\sigma$ at $y$.  \citet{Shor1985}
+developed a theory of subgradient methods for handling convex,
+non-differentiable optimization problems.  The $r$-algorithm,
+described in \citet[][Chapter 3]{Shor1985} and implemented as
+\pkg{SolvOpt} in \proglang{C} by \citet{KappelKuntsevich2000}, was
+found to work particularly well in practice.   A main feature of the
+\pkg{LogConcDEAD} package is an implementation of an adaptation of this
+$r$-algorithm for the particular problem encountered in log-concave
+density estimation.
+
+\subsection[Shor's r-algorithm]{Shor's $r$-algorithm}
+\label{sec:shor}
+
+Our adaptation of Shor's $r$-algorithm produces a sequence $(y^t)$
+with the property that 
+\[\sigma(y^t) \rightarrow \min_{y \in \rn}
+\sigma(y)\]
+as $t \rightarrow \infty$.  At each iteration, the
+algorithm requires the evaluation $\sigma(y^t)$, and the subgradient
+at $y^t$, denoted $\partial \sigma(y^t)$, which determines the
+direction of the move to the next term $y^{t+1}$ in the sequence.
+
+Exact expressions for $\sigma(y^t)$ and $\partial \sigma(y^t)$ are
+provided in \citet{CSS2010}.  In practice, their computation requires
+the evaluation of convex hulls and triangulations of certain finite
+sets of points.  This can be done in a fast and robust way via the
+\pkg{Quickhull} algorithm \citep{BDH1996}, available in \proglang{R}
+through the \pkg{geometry} package \citep{GramacyGrasman2008}.  Due to
+the presence of some removable singularities in the expressions for
+$\sigma(y^t)$ and $\partial \sigma(y^t)$, it is computationally more
+stable to use a Taylor approximation to the true values for certain
+values of $y^t$ \citep{CuleDuembgen2008}.  The values for which a
+Taylor expansion (rather than direct evaluation) is used may be
+controlled by the argument \code{Jtol} to the \pkg{LogConcDEAD}
+function \code{mlelcd}.  By default this is $10^{-3}$; altering this
+parameter is not recommended.
+
+Several parameters may be used to control the $r$-algorithm as detailed by
+\citet{KappelKuntsevich2000}. In the function \code{mlelcd}, they may
+be controlled by the user via the arguments \code{stepscale1},
+\code{stepscale2}, \code{stepscale3}, \code{stepscale4} and
+\code{desiredsize}. For a detailed description of these parameters, as
+well as of this implementation of the $r$-algorithm, see
+\citet{KappelKuntsevich2000}.
+
+\subsubsection{Stopping criteria}
+\label{sec:stopping}
+The implementation of the $r$-algorithm used in the main function
+\code{mlelcd} terminates after the $(t+1)$th iteration if each of 
+the following conditions holds:
+\begin{align}
+\lvert y^{t+1}_i - y^t_i \rvert &\leq \delta \lvert y^t_i
+  \rvert \textrm{ for } i = 1, \ldots, n \label{ytol}\\
+\lvert \sigma(y^{t+1}) - \sigma(y^t) \rvert &\leq \epsilon
+  \lvert \sigma(y^t) \rvert \label{sigmatol} \\
+\left\vert \int_{C_n} \exp\{\bar{h}_{y^t}(x)\}\, dx - 1 \right\vert&
+\leq \eta \label{inttol}
+\end{align}
+for some small tolerances $\delta$, $\epsilon$ and $\eta$.  
+
+\eqref{ytol} and \eqref{sigmatol} are the criteria suggested by
+\citet{KappelKuntsevich2000}; \eqref{inttol} is based on the
+observation that the maximum likelihood estimator is
+density \citep{CSS2010}.  By default, these values are $\delta =
+10^{-4}$, $\epsilon = 10^{-8}$ and $\eta = 10^{-4}$, but they may be
+modified by the user as required, using the parameters \code{ytol},
+\code{sigmatol} and \code{integraltol} respectively.  The default
+parameters have been found to work well and it is not recommended to
+alter them.
+
+
+
+
+\section{Usage}
+\label{sec:usage}
+In this section we illustrate the functions available in \pkg{LogConcDEAD} 
+through several simple simulated data examples.  These functions include 
+\code{mlelcd}, which computes the maximum likelihood estimator, as well as 
+graphics facilities and the function \code{rlcd} for sampling from the fitted density.  
+
+
+
+\subsection{Example 1: 1-d data}
+\label{sec:eg1d}
+
+<<label=setn,echo=FALSE,include=FALSE>>=
+n <- 100
+@ 
+
+For this example, we will use \Sexpr{n} points from a Gamma($2,1$)
+distribution.  The seed has been set (to $1$), so this example can be
+reproduced exactly; you may also like to try with a different seed.
+
+<<>>=
+set.seed(1)
+<<setn>>
+x <- sort(rgamma(n,shape=2))
+out1 <- mlelcd(x) ## LogConcDEAD estimate
+@ 
+
+The visual appearance of our estimator produced by \pkg{LogConcDEAD} can be seen in Figure~\ref{fig:1d}. This figure is produced using the following code:
+<<label=plot:1d, eval=FALSE>>=
+ylim <- c(0,0.4) 
+lgdtxt <- c("LogConcDEAD", "true")
+lgdlty <- c(1,3)
+plot(out1, ylim=ylim,lty=1)
+lines(x, x*exp(-x), lty=3)
+legend(x=3, y=0.4, lgdtxt, lty=lgdlty)
+@ 
+
+ Figure~\ref{fig:log1d} also illustrates the structure of the log-concave
+ maximum likelihood estimator: its logarithm is piecewise linear with
+ changes of slope only at observation points.  This figure is produced
+ using the following code:
+
+<<label=plot:log1d, eval=FALSE>>=
+ylim <- c(-4,-1)
+lgdtxt <- c("LogConcDEAD",  "true")
+lgdlty <- c(1,3)
+plot(out1, uselog=TRUE, lty=1)
+lines(x, log(x)-x, lty=3)
+legend(x=3, y=-1, lgdtxt, lty=lgdlty) 
+@ 
+
+For one-dimensional data, we note that the alternative active set algorithm from
+\pkg{logcondens} \citep{RufibachDuembgen2006, DHR2007} may also be used to
+compute the log-concave maximum likelihood estimator, which appears to be faster. Unsurprisingly, the output results from the two procedures are essentially the same.
+
+\begin{figure}[ht!]
+  \centering
+<<label=fig_1d,echo=FALSE, results=hide, fig=TRUE, include=FALSE>>=
+<<plot:1d>>
+@ 
+\includegraphics[width=0.8\textwidth, clip=TRUE, trim=0 10 0 50]{LogConcDEAD-fig_1d}
+
+  \caption{Density estimates (and true density) based on \Sexpr{n}
+  i.i.d\ observations from a Gamma(2,1) distribution.}
+  \label{fig:1d}
+\end{figure}
+
+\begin{figure}[ht!]
+  \centering
+<<label=fig_log1d,echo=FALSE,results=hide, fig=TRUE, include=FALSE>>=
+<<plot:log1d>>
+@ 
+\includegraphics[width=0.8\textwidth, clip=TRUE, trim=0 10 0 50]{LogConcDEAD-fig_log1d}
+
+\caption{Log of density estimate (and true log-density) based on
+    \Sexpr{n} i.i.d\ observations from a Gamma(2,1) distribution.}
+\label{fig:log1d}
+ \end{figure}
+
+
+
+\subsection{Example 2: 2-d normal data}
+\label{sec:eg2d}
+
+<<label=setn2, include=FALSE, echo=FALSE>>=
+n <- 100
+@ 
+For this section, we will generate \Sexpr{n} points from a bivariate
+normal distribution with independent components.  Again, we have set
+the seed (to 22) for reproducibility.
+
+<<>>=
+set.seed(22)
+d <- 2
+<<setn2>>
+x <- matrix(rnorm(n*d),ncol=d)
+@ 
+
+
+\subsubsection{Basic usage}
+\label{sec:basic}
+
+The basic command in this package is \code{mlelcd}, which computes
+the log-concave maximum likelihood estimate $\hat{f}_n$.  The
+\code{verbose} option controls the diagnostic output, which will be
+described in more detail below.
+
+<<>>=
+out <- mlelcd(x,verbose=50)
+@ 
+
+The default \code{print} statement shows the value of the logarithm of
+the maximum likelihood estimator at the data points, the number of
+iterations of the subgradient algorithm required, and the total number
+of function evaluations required to reach convergence.
+
+In the next two subsections, we will describe the input and output in
+more detail.
+
+\subsubsection{Input}
+The only input required is an $n \times d$ matrix of data points.  One
+dimensional (vector) input will be converted to a matrix.  Optionally
+a vector of weights \code{w}, corresponding to $(w_1, \ldots, w_n)$ in
+\eqref{eq:weights}, may be specified.  By default this is
+\[\left(\frac{1}{n}, \ldots, \frac{1}{n}\right),\] which is
+appropriate for independent and identically distributed observations.
+
+A starting value \code{y} may be specified for the vector $\left(y_1,
+  \ldots, y_n \right)$; by default a kernel
+density estimate (using a normal kernel and a diagonal bandwidth
+selected using a normal scale rule) is used.  This is performed using
+the (internal) function \code{initialy}.
+
+The parameter \code{verbose} controls the degree of diagnostic
+information provided by \pkg{SolvOpt}.  The default value, $-1$,
+prints nothing.  The value $0$ prints warning messages only.  If the
+value is $m > 0$, diagnostic information is printed every $m$th
+iteration.  The printed information summarises the progress of the algorithm,
+displaying the iteration number, current value of the objective
+function, (Euclidean) length of the last step taken, current value of
+$\int \exp\{\bar{h}_y(x)\} \, dx$ and (Euclidean) length of the subgradient.
+The last column is motivated by the fact that $0$ is a subgradient
+only at the minimum of $\sigma$ \citep[Chapter 27]{Rockafellar1997},
+and so for smooth functions a small value of the subgradient may be
+used as a stopping criterion.  For nonsmooth functions, we may be
+close to the minimum even if this value is relatively large, so only
+the middle three columns form the basis of our stopping criteria, as described in Section~\ref{sec:stopping}.
+
+The remaining optional arguments are generic parameters of the $r$-algorithm, and 
+have already been discussed in Section~\ref{sec:alg}.
+
+\subsubsection{Output}
+The output is an object of class \code{\char34LogConcDEAD\char34},
+which has the following elements:
+<<>>=
+names(out)
+@ 
+
+The first two components \code{x} and \code{w} give the input data.
+The component \code{logMLE} specifies the logarithm of the maximum
+likelihood estimator, via its values at the observation points.  In
+this example the first 5 elements are shown, corresponding to the
+first 5 rows of the data matrix \code{x}.
+<<>>=
+out$logMLE[1:5]
+@ 
+
+As was mentioned in Sections \ref{sec:intro} and \ref{sec:alg}, there
+is a triangulation of $C_n = \mathrm{conv}(X_1,\ldots,X_n)$, the
+convex hull of the data,  such that
+$\log \hat{f}_n$ is affine on each simplex in the triangulation.  Each
+simplex in the triangulation is the convex hull of a subset of
+$\{X_1,\ldots,X_n\}$ of size $d+1$.  Thus the simplices in the
+triangulation may be indexed by a finite set $J$ of $(d+1)$-tuples,
+which are available via
+
+<<>>=
+out$triang[1:5,]
+@ 
+
+For each $j \in J$, there is a corresponding vector $b_j \in \mathbb{R}^d$ 
+and $\beta_j \in \mathbb{R}$, which define the affine function which coincides 
+with $\log \hat{f}_n$ on the $j$th simplex in the triangulation.  These
+values $b_j$ and $\beta_j$ are available in
+<<>>=
+out$b[1:5,]
+out$beta[1:5]
+@ 
+(In all of the above cases, only the first 5 elements are shown.)
+As discussed in \citet{CSS2010}, for each $j \in J$ we may find a
+matrix $A_j$ and a vector $\alpha_j$ such that the map $w \mapsto A_jw +
+\alpha_j$ maps the unit simplex in $\mathbb{R}^d$ to the $j$th simplex 
+in the triangulation.   The inverse of this map, $x \mapsto A_j^{-1} x -
+A_j^{-1} \alpha_j$, is required for easy evaluation of the density at a 
+point, and for plotting.  The matrix $A_j^{-1}$ is available in \code{out\$verts} and
+$A_j^{-1} \alpha_j$ is available in \code{out\$vertsoffset}.  
+
+The \code{\char34LogConcDEAD\char34} object also provides some
+diagnostic information on the execution of the \pkg{SolvOpt} routine:
+the number of iterations required, the number of function evaluations
+needed, the
+number of subgradient evaluations required (in a vector
+\code{NumberOfEvaluations}), and the minimum value of the objective
+function $\sigma$ attained (\code{MinSigma}).
+
+<<>>=
+out$NumberOfEvaluations
+out$MinSigma
+@ 
+
+The indices of simplices in the convex hull $C_n$ are available:
+<<>>=
+out$chull[1:5,]
+@ 
+In addition, an outward-pointing normal vector for each face of the
+convex hull $C_n$ and an offset point (lying on the face of the convex hull)
+may be obtained.  
+
+<<>>=
+out$outnorm[1:5,]
+out$outoffset[1:5,]
+@ 
+
+This information may be used to test whether or not a point lies in $C_n$, 
+as $x \in C_n$ if and only if $p^T(x-q) \leq 0$ for every face of the convex hull, 
+where $p$ denotes an outward normal and $q$ an offset point.
+
+When $d=1$, the convex hull consists simply of the minimum and maximum
+of the data points, and \code{out$outnorm} and \code{out$outoffset} are
+\code{NULL}, although \code{out$chull} still takes on the appropriate
+values.
+
+
+\subsection{Graphics}
+\label{sec:graphics}
+Various aspects of the log-concave maximum likelihood estimator can be
+plotted using the \code{plot} command, applied to an object of class \code{\char34LogConcDEAD\char34}. 
+
+The plots are based on interpolation over a grid, which can be
+somewhat time-consuming.  As several will be done here, we can save
+the results of the interpolation separately, using the function
+\code{interplcd}, and use it to make several plots.  The number of
+grid points may be specified using the parameter \code{gridlen}.  By
+default, \code{gridlen}=100, which is suitable for most plots.  
+
+Where relevant, the colors were obtained by a call to \code{heat_hcl}
+in the package \pkg{colorspace} \citep{colorspace}, following the
+recommendation of \citet{HMZ2009}. Thanks to Achim Zeileis for this
+helpful suggestion.
+
+<<>>=
+g <- interplcd(out, gridlen=200)
+g1 <- interpmarglcd(out, marg=1)
+g2 <- interpmarglcd(out, marg=2)
+@ 
+The plots in Figure~\ref{fig:2d} show a contour plot of the estimator
+and a contour plot of its logarithm for \Sexpr{n} points in 2
+dimensions.  Note that the contours of log-concave densities enclose
+convex regions. This figure is produced using
+<<label=plot:2d, eval=FALSE>>=
+par(mfrow=c(1,2), pty="s", cex=0.7) #square plots
+plot(out,g=g,addp=FALSE,asp=1)
+plot(out,g=g,uselog=TRUE,addp=FALSE,asp=1)
+@ 
+
+\begin{figure}[ht!]
+  \centering
+<<echo=FALSE, results=hide>>=
+png(file="LogConcDEAD-fig_2d.png")
+<<plot:2d>>
+dev.off()
+@
+\includegraphics[width=\textwidth, clip=TRUE, trim = 0 120 0 100]{LogConcDEAD-fig_2d}
+  \caption{Plots based on \Sexpr{n} points from a standard bivariate
+  normal distribution}
+  \label{fig:2d}
+
+\end{figure}
+
+
+If $d>1$, we can plot one-dimensional marginals by setting the
+\code{marg} parameter.  Note that the marginal densities of a
+log-concave density are log-concave (discussed in \citet{CSS2010}, as
+a consequence of the theory of \citet{Prekopa1973}).  This is
+illustrated by Figure~\ref{fig:2dmarg} using the following code:
+<<label=plot:2dmarg, eval=FALSE>>=
+par(mfrow=c(1,2), pty="s", cex=0.7) #normal proportions 
+plot(out,marg=1,g.marg=g1)
+plot(out,marg=2,g.marg=g2)
+@ 
+
+\begin{figure}[ht!]
+  \centering
+<<label=fig_2dmarg,mecho=FALSE,results=hide, fig=TRUE, include=FALSE>>=
+<<plot:2dmarg>>
+@
+  \includegraphics[width=\textwidth, clip=TRUE, trim=0 110 0
+  100]{LogConcDEAD-fig_2dmarg}
+\caption{Plots of estimated marginal densities based on \Sexpr{n} points from a standard bivariate
+  normal distribution}
+  \label{fig:2dmarg}
+\end{figure}
+
+The plot type is controlled by the argument \code{type}, which may
+take the values \code{\char34p\char34} (a perspective plot),
+\code{\char34i\char34}, \code{\char34c\char34} or
+\code{\char34ic\char34} (colour maps, contours or both), or
+\code{\char34r\char34} (a 3d plot using the \pkg{rgl} package
+\citep{AdlerMurdoch2007}).  The default plot type is \code{\char34ic\char34}.
+
+The \pkg{rgl} package allows user interaction with the plot (e.g. the
+plot can be rotated using the mouse and viewed from different angles).
+Although we are unable to demonstrate this feature on paper, Figure~\ref{fig:rgl} shows the type of output produced by \pkg{rgl}, using
+the following code:  
+
+<<label=plot:rgl, eval=FALSE>>=
+plot(out,g=g,type="r")
+@ 
+Figure~\ref{fig:rgllog} shows the output produced by setting
+\code{uselog = TRUE} to plot on the log
+scale.  Here we can clearly see the structure of the log-concave
+density estimate. This is produced using the command
+
+<<label=plot:rgllog, eval=FALSE>>=
+plot(out,g=g,type="r",uselog=TRUE)
+@ 
+
+\begin{figure}[ht!]
+  \centering
+<<echo=FALSE, results=hide, eval=FALSE>>=
+<<plot:rgl>>
+par3d(windowRect = c(55,66,311+256, 322+256))
+rgl.snapshot(file="rglfig.png")
+@ 
+\includegraphics[clip=TRUE, trim=0 10 0 60]{rglfig.png}
+    \caption{\pkg{rgl} output for Example 2}
+  \label{fig:rgl}
+\end{figure}
+
+\begin{figure}[ht!]
+  \centering
+<<echo=FALSE, results=hide, eval=FALSE>>=
+<<plot:rgllog>>
+par3d(windowRect = c(55,66,311+256, 322+256))
+rgl.snapshot(file="rgllog.png")
+@ 
+\includegraphics[clip=TRUE, trim=0 50 0 80]{rgllog.png}
+    \caption{\pkg{rgl} output for Example 2 with \code{uselog=TRUE}}
+  \label{fig:rgllog}
+\end{figure}
+
+\subsection{Other functions}
+\label{sec:usageother}
+
+In this section we will describe the use of the additional functions
+\code{rlcd} and \code{dlcd}.
+
+\subsubsection{Sampling from the MLE}
+Suppose we wish to estimate a functional of the form $\theta(f) = \int
+g(x) f(x) \, dx$, for example the mean or other moments, the
+differential entropy $- \int f(x) \log f(x) \,dx$, etc.  Once we have
+obtained a density estimate $\hat{f}_n$, such as the log-concave
+maximum likelihood estimator, we may use it as the basis for a plug-in
+estimate $\hat{\theta}_n = \int g(x) \hat{f}_n(x) \, dx$, which may be
+approximated using a simple Monte Carlo procedure even if an analytic
+expression is not readily available.  In more detail, we generate a
+sample $Z_1, \ldots, Z_N$ drawn from $\hat{f}_n$, and approximate
+$\hat{\theta}_n$ by 
+\[\tilde{\theta}_n = \frac{1}{N} \sum_{j=1}^N g(Z_j).\]
+This requires the ability to sample from $\hat{f}_n$, which may be
+achieved given an object of class \code{\char34LogConcDEAD\char34} as follows:
+<<>>=
+nsamp <- 1000
+mysamp <- rlcd(nsamp,out)
+@
+Details of the function \code{rlcd} are given in \citet{CSS2010} and \citet{GopalCasella2010}.  
+
+Once we have a random sample, plug-in estimation of various
+functionals is straightforward.
+<<>>=
+colMeans(mysamp)
+cov(mysamp)
+@
+
+\subsubsection{Evaluation of fitted density}
+
+We may evaluate the fitted density at a
+point or matrix of points such as
+<<>>=
+m <- 10
+mypoints <- 1.5*matrix(rnorm(m*d),ncol=d)
+@ 
+using the command
+
+<<>>=
+dlcd(mypoints,out)
+@ 
+
+Note that, as expected, the density estimate is zero for points
+outside the convex hull of the original data.  
+
+The \code{dlcd} function may be used in conjunction with
+\code{rlcd} to estimate more complicated functionals such as a
+100$(1-\alpha)\%$ highest density region, defined by
+\citet{Hyndman1996} as $R_\alpha = \{x \in \mathbb{R}^d: f(x) \geq
+f_\alpha\}$, where $f_\alpha$ is the largest constant such that
+$\int_{R_\alpha} f(x) \, dx \geq 1-\alpha$.  Using the algorithm
+outlined in \citet[][Section 3.2]{Hyndman1996}, it is straightforward
+to approximate $f_\alpha$ as follows:
+
+<<>>=
+myval <- sort(dlcd(mysamp,out))
+alpha <- c(.25,.5,.75)
+myval[(1-alpha)*nsamp]
+
+@ 
+
+
+\subsection{Example 3: 2-d binned data}
+\label{sec:egbin}
+<<label=setn3, include=FALSE, echo=FALSE>>=
+n <- 100
+@ 
+In this section, we demonstrate the use of \pkg{LogConcDEAD} with binned data.  The
+seed here has been set to $333$ for reproducibility; you may wish to
+try these examples with other seeds.  
+
+We generate some data from a normal distribution with
+correlation using the package \pkg{mvtnorm} \citep{mvtnorm2008}.  As before, this may be installed and loaded using
+<<eval=FALSE>>=
+install.packages("mvtnorm")
+library("mvtnorm")
+@ 
+
+<<>>=
+set.seed(333)
+sigma <- matrix(c(1,0.2,0.2,1),nrow=2)
+d <- 2
+<<setn3>>
+y <- rmvnorm(n,sigma=0.1*sigma)
+xall <- round(y,digits=1)
+@ 
+
+The matrix \code{xall} therefore contains \Sexpr{n} observations,
+rounded to $1$ decimal place; there are in total
+\Sexpr{nrow(unique(xall))} distinct observations.  In order to compute
+an appropriate log-likelihood, we will use the function
+\code{getweights} to extract a matrix of distinct observations and
+a vector of weights for use in \code{mlelcd}.  The result of this has
+two parts: a matrix \code{x} consisting of the distinct observations,
+and a vector \code{w} of weights.  We may also use \code{interplcd}
+as before to evaluate the estimator on a grid for plotting purposes.
+
+<<>>=
+tmpw <- getweights(xall)
+outw <- mlelcd(tmpw$x,w=tmpw$w)
+gw <- interplcd(outw, gridlen=200)
+@ 
+
+In Figure~\ref{fig:bin} we plot density and log-density estimates using a
+contour plot as before.  In contrast to the examples in Figure
+\ref{fig:2d}, we have \code{addp=TRUE} (the default), which superposes the
+observation points on the plots, and \code{drawlabels=FALSE}, which
+suppresses the contour labels. The code to do this is
+
+<<label=plot:bin, eval=FALSE>>=
+par(mfrow=c(1,2), pty="s", cex=0.7) #2 square plots 
+plot(outw,g=gw,asp=1,drawlabels=FALSE)
+plot(outw,g=gw,uselog=TRUE,asp=1,drawlabels=FALSE)
+@ 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\textwidth, clip=TRUE, trim=0 120 0 100]{LogConcDEAD-fig_bin.png}
+<<results=hide, echo=FALSE>>=
+png(file="LogConcDEAD-fig_bin.png")
+<<plot:bin>>
+dev.off()
+@
+\caption{Density and log density estimate based on \Sexpr{n} points
+  from a bivariate normal distribution in two dimensions (truncated to 1 decimal place) (Example 3)}
+\label{fig:bin}
+\end{figure}
+
+
+\subsection{Example 4: Higher-dimensional data}
+\label{sec:highd}
+
+<<label=setn4, include=FALSE, echo=FALSE>>=
+n <- 100
+@ 
+In our final example we illustrate the use of the log-concave density
+estimate for higher-dimensional data.  For this example the seed has
+been set to $4444$.  The log-concave maximum likelihood estimator is
+defined and may be computed and evaluated in exactly the same way as
+the 2-dimensional examples in Sections \ref{sec:eg2d} and
+\ref{sec:egbin}.  This estimate will be based on \Sexpr{n} points.
+
+<<>>=
+set.seed(4444)
+d <- 3
+<<setn4>>
+x <- matrix(rgamma(n*d,shape=2),ncol=d)
+out3 <- mlelcd(x)
+@
+
+The function \code{dmarglcd} may be used to evaluate the marginal
+estimate, setting the parameter \code{marg} appropriately. Note that,
+as before, the estimate is $0$ outside the convex hull of the observed data.
+
+<<>>=
+mypoints <- c(0,2,4)
+dmarglcd(mypoints, out3, marg=1)
+@ 
+
+One-dimensional marginal distributions may be plotted
+easily, by setting the \code{marg} parameter to the appropriate margin
+as shown in Figure~\ref{fig:3d} using the following:
+
+<<label=plot:3deg, eval=FALSE>>=
+par(mfrow=c(2,2),cex=0.8)
+plot(out3, marg=1)
+plot(out3, marg=2)
+plot(out3, marg=3)
+tmp <- seq(min(out3$x), max(out3$x),len=100)
+plot(tmp, dgamma(tmp,shape=2), type="l", 
+xlab="X", ylab="true marginal density")
+title(main="True density")
+@ 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\textwidth, clip=TRUE, trim=0 10 0 20]{LogConcDEAD-fig_3deg}
+<<label=fig_3deg, results=hide, echo=FALSE, include=FALSE, fig=TRUE>>=
+<<plot:3deg>>
+@
+\caption{Marginal density estimates for 3 dimensional data (based on
+  \Sexpr{n} points)}
+\label{fig:3d}
+\end{figure}
+
+\clearpage
+\bibliography{logconcdead}
+\end{document}
+
+

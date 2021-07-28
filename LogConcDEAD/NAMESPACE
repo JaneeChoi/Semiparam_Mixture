@@ -1,0 +1,34 @@
+useDynLib(LogConcDEAD, .registration = TRUE)
+
+# Export all names
+export(
+  dlcd,
+  dmarglcd,
+  dslcd,
+  EMmixlcd,
+  getinfolcd,
+  getweights,
+  hatA,
+  interactive2D,
+  interplcd,
+  interpmarglcd,
+  mlelcd,
+  rlcd,
+  rslcd,
+  cov.LogConcDEAD
+)
+
+# Import all packages listed as Imports or Depends
+import(
+  MASS,
+  mvtnorm 
+)
+
+import(mclust, except="dmvnorm")
+
+importFrom("tcltk", "tclVar", "tclvalue", "tklabel", "tkpack", "tkscale", "tktoplevel")
+importFrom("graphics", "contour", "image", "persp", "plot", "points")
+importFrom("stats", "cov", "dnorm", "integrate", "pnorm", "rexp", "runif", "sd", "var")
+
+S3method( "plot", "LogConcDEAD")
+S3method( "print", "LogConcDEAD")
