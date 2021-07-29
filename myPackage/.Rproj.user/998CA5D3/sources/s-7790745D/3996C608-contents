@@ -2,3 +2,5 @@
 
 export(sp.mix.1D)
 export(sp.mix.multi)
+importFrom(LogConcDEAD,mlelcd)
+importFrom(mvtnorm,dmvnorm)

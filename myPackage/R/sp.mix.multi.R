@@ -1,3 +1,7 @@
+#' @importFrom LogConcDEAD mlelcd
+#' @importFrom mvtnorm dmvnorm
+#'
+#'
 #' @title Estimates a Semiparametric Mixture Density for multi-dimensional data
 #'
 #' @description \code{sp.mix.multi} returns a semiparametric mixture density estimates for given multi-dimensional z, which are the probit-transformed p-values.
@@ -51,7 +55,7 @@ sp.mix.multi <- function(z, tol = 5e-6, max.iter = 30, mono = TRUE)
     weight <- 1 - new.gam
     new.f1.tilde <- rep(0, n)
     which.z <- (new.gam <= .9)
-    lcd <- mlelcd(z[which.z,], w = weight[which.z]/sum(weight[which.z]))
+    lcd <- LogConcDEAD::mlelcd(z[which.z,], w = weight[which.z]/sum(weight[which.z]))
     new.f1.tilde[which.z] <- exp(lcd$logMLE)
 
     ## Update

@@ -1,3 +1,5 @@
+#' @importFrom LogConcDEAD mlelcd
+#'
 #' @title Estimates a Semiparametric Mixture Density for 1-d data
 #'
 #' @description \code{sp.mix.1D} returns a semiparametric mixture density estimates for given 1-d z, which are the probit-transformed p-values.
@@ -53,7 +55,7 @@ sp.mix.1D <- function(z, tol = 5.0e-6, max.iter = 30, doplot = TRUE, thre.localF
     which.z <- new.gam <= .9
     weight <- 1 - new.gam[which.z]
     weight <- weight/sum(weight)
-    new.f1.tilde[which.z] <- exp(mlelcd(z[which.z], w = weight)$logMLE)
+    new.f1.tilde[which.z] <- exp(LogConcDEAD::mlelcd(z[which.z], w = weight)$logMLE)
     #new.f1.tilde[which.z] <- exp(fmlcd(matrix(z[which.z],
     #                                          nrow = length(weight),
     #                                          ncol = 1),
