@@ -10,6 +10,5 @@ vel <- x$V4 # represents the Radial velocity data of stars in the Carina galaxy
 vel
 vel.fit <- sp.mix.1D(vel)
 
-??myPackage
 
 
