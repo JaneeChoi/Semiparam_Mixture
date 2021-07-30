@@ -1,7 +1,7 @@
 devtools::install_github("JaneeChoi/SpMix")
 library(SpMix)
 
-setwd("Documents/GitHub/Semiparam_Mixture/SPMix-LocalFDR/Carina")
+setwd("C:/Users/serim/Documents/GitHub/Semiparam_Mixture/SPMix-LocalFDR/Carina")
 dat <- read.table('carina.dat')
 str(dat)
 
