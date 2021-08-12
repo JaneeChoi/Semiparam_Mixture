@@ -1,8 +1,9 @@
 devtools::install_github("JaneeChoi/SpMix")
 library(SpMix)
 
-setwd("C:/Users/serim/Documents/GitHub/Semiparam_Mixture/SPMix-LocalFDR/Carina")
-dat <- read.table('carina.dat')
+?sp.mix.1D
+
+dat <- read.table('Semiparam_Mixture/SPMix-LocalFDR/Carina/carina.dat')
 str(dat)
 
 x <- dat[dat$V8 + dat$V9 > 0,]
