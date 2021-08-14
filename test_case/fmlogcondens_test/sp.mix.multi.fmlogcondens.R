@@ -4,11 +4,12 @@ setwd("C:/Users/serim/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_
 install.packages ("fmlogcondens_1.0.2.tar.gz", repos=NULL, type="source")
 
 
-library(fmlogcondens)
+
 
 sp.mix.multi <- function(z, tol = 5e-6, max.iter = 30, mono = TRUE, thre.z = 0.9, Uthre.gam = 0.9, Lthre.gam = 0.01)
   # FOR MULTIVARIATE CASE ONLY
 {
+  library(fmlogcondens)
   
   z <- as.matrix(z)
   n <- dim(z)[1]
@@ -41,8 +42,8 @@ sp.mix.multi <- function(z, tol = 5e-6, max.iter = 30, mono = TRUE, thre.z = 0.9
     weight <- 1 - new.gam
     new.f1.tilde <- rep(0, n)
     which.z <- (new.gam <= thre.z)
-    lcd <- LogConcDEAD::mlelcd(z[which.z,], w = weight[which.z]/sum(weight[which.z]))
-    new.f1.tilde[which.z] <- exp(lcd$logMLE)
+    lcd <- fmlogcondens::fmlcd(X=z[which.z,], w = weight[which.z]/sum(weight[which.z]))
+    new.f1.tilde[which.z] <- exp(lcd$y)
     
     ## Update
     which.gam <- (new.gam <= Uthre.gam)*(new.gam >= Lthre.gam)
