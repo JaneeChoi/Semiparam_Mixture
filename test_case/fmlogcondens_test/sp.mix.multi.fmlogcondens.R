@@ -1,15 +1,17 @@
-devtools::install_github("FabianRathke/fmlogcondens")
+install.packages("miceadds")
+library(miceadds)
+#devtools::install_github("FabianRathke/fmlogcondens")
+#install.packages ("Semiparam_Mixture/test_case/fmlogcondens_test/fmlogcondens_1.0.1.tar.gz", repos=NULL, type="source")
 
-setwd("C:/Users/serim/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test")
-install.packages ("fmlogcondens_1.0.2.tar.gz", repos=NULL, type="source")
+source.all("R")
 
-
+devtools::install_github("JaneeChoi/SpMix",ref="fmlogcondens",build_vignettes = FALSE)
+devtools::install_github("JaneeChoi/SpMix")
 
 
 sp.mix.multi <- function(z, tol = 5e-6, max.iter = 30, mono = TRUE, thre.z = 0.9, Uthre.gam = 0.9, Lthre.gam = 0.01)
   # FOR MULTIVARIATE CASE ONLY
 {
-  library(fmlogcondens)
   
   z <- as.matrix(z)
   n <- dim(z)[1]
@@ -42,7 +44,7 @@ sp.mix.multi <- function(z, tol = 5e-6, max.iter = 30, mono = TRUE, thre.z = 0.9
     weight <- 1 - new.gam
     new.f1.tilde <- rep(0, n)
     which.z <- (new.gam <= thre.z)
-    lcd <- fmlogcondens::fmlcd(X=z[which.z,], w = weight[which.z]/sum(weight[which.z]))
+    lcd <- fmlcd(X=z[which.z,], w = weight[which.z]/sum(weight[which.z]))
     new.f1.tilde[which.z] <- exp(lcd$y)
     
     ## Update

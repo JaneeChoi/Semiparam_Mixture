@@ -1,3 +1,7 @@
+source(file="SPMix-LocalFDR/SpMix.R")
+source(file = 'test_case/fmlogcondens_test/sp.mix.multi.fmlogcondens.R')
+
+
 Draw.boxplotsM <- function(Obj)
 {
   p0hat <- Obj$p0hat.SP
@@ -84,7 +88,7 @@ SimMultNormal <- function(M, n, p0)
               res1D.2 = result.1D.2))
 }
 
-source(file = '../SpMix.R')
+
 
 M <- 500
 N <- 1000
