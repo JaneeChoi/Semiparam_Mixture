@@ -1,6 +1,8 @@
 #source(file="SPMix-LocalFDR/SpMix.R")
 #source(file = 'test_case/fmlogcondens_test/sp.mix.multi.fmlogcondens.R')
-#devtools::install_github("JaneeChoi/SpMix",ref="fmlogcondens",build_vignettes = FALSE)
+
+
+devtools::install_github("JaneeChoi/SpMix",ref="fmlogcondens",build_vignettes = FALSE)
 library(SpMix)
 library(fmlogcondens)
 
@@ -94,6 +96,9 @@ SimMultNormal <- function(M, n, p0)
 
 M <- 500
 N <- 1000
+p0=0.95
+r=1
+n=N
 Res.7 <- SimMultNormal(M = M, n = N, p0 = 0.95)
 Res.8 <- SimMultNormal(M = M, n = N, p0 = 0.90)
 Res.9 <- SimMultNormal(M = M, n = N, p0 = 0.80)
