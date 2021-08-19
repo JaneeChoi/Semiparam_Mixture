@@ -1,6 +1,8 @@
-source(file="SPMix-LocalFDR/SpMix.R")
-source(file = 'test_case/fmlogcondens_test/sp.mix.multi.fmlogcondens.R')
-
+#source(file="SPMix-LocalFDR/SpMix.R")
+#source(file = 'test_case/fmlogcondens_test/sp.mix.multi.fmlogcondens.R')
+#devtools::install_github("JaneeChoi/SpMix",ref="fmlogcondens",build_vignettes = FALSE)
+library(SpMix)
+library(fmlogcondens)
 
 Draw.boxplotsM <- function(Obj)
 {
@@ -13,6 +15,7 @@ Draw.boxplotsM <- function(Obj)
   boxplot(FPR, main = "False Positive Rate = (1 - Specificity)", ylim = c(0, 0.05))
   boxplot(Sensitivity, main = "Sensitivity", ylim = c(0.8, 1))
 }
+
 
 SimMultNormal <- function(M, n, p0)
   # [Multivariate] Null: Normal, Nonnull: Normal
@@ -89,12 +92,22 @@ SimMultNormal <- function(M, n, p0)
 }
 
 
-
 M <- 500
 N <- 1000
 Res.7 <- SimMultNormal(M = M, n = N, p0 = 0.95)
 Res.8 <- SimMultNormal(M = M, n = N, p0 = 0.90)
 Res.9 <- SimMultNormal(M = M, n = N, p0 = 0.80)
+
+
+
+##debug
+setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test")
+library(fmlogcondens)
+X=as.matrix(read.csv("fmlcd_X.csv")[,2:3])
+w=read.csv("fmlcd_w.csv")[,2]
+options(error=recover)
+fmlcd(X=X, w=w)
+##
 
 save.image(file = "SimMultiNormal.RData")
 

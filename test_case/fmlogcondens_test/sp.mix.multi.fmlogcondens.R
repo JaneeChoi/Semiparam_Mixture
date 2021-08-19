@@ -1,12 +1,9 @@
-install.packages("miceadds")
-library(miceadds)
-#devtools::install_github("FabianRathke/fmlogcondens")
-#install.packages ("Semiparam_Mixture/test_case/fmlogcondens_test/fmlogcondens_1.0.1.tar.gz", repos=NULL, type="source")
-
-source.all("R")
+devtools::install_github("FabianRathke/fmlogcondens")
 
 devtools::install_github("JaneeChoi/SpMix",ref="fmlogcondens",build_vignettes = FALSE)
 devtools::install_github("JaneeChoi/SpMix")
+
+library(SpMix)
 
 
 sp.mix.multi <- function(z, tol = 5e-6, max.iter = 30, mono = TRUE, thre.z = 0.9, Uthre.gam = 0.9, Lthre.gam = 0.01)

@@ -39,14 +39,20 @@ paramFitGammaOne <- function(X, w, ACVH, bCVH, cvh) {
     b <- runif(m)
     params <- c(a, b)
     r <- callNewtonBFGSLInitC(X, w, params, ACVH, bCVH)
+    print("r is")
+    print(r)
     # check for best initialization
     if (r$logLike < minLogLike) {
       optParams <- r$params
+      print("optParams is")
+      print(optParams)
       minLogLike <- r$logLike
     }
   }
 
   aOpt <- matrix(optParams[1:(m * d)], m, d)
+  print("a0pt is")
+  print(a0pt)
   bOpt <- rep(optParams[(m * d + 1):length(optParams)])
 
   y <- matrix(-log(apply(exp(aOpt %*% t(X) + matrix(rep(bOpt, n), length(bOpt), n)), 2, sum)), n, 1)
