@@ -2,9 +2,10 @@
 #source(file = 'test_case/fmlogcondens_test/sp.mix.multi.fmlogcondens.R')
 
 
-devtools::install_github("JaneeChoi/SpMix",ref="fmlogcondens",build_vignettes = FALSE)
+devtools::install_github("JaneeChoi/SpMix",build_vignettes = FALSE)
 library(SpMix)
-library(fmlogcondens)
+
+#library(fmlogcondens)
 
 Draw.boxplotsM <- function(Obj)
 {
@@ -94,15 +95,16 @@ SimMultNormal <- function(M, n, p0)
 }
 
 
-M <- 500
-N <- 1000
-p0=0.95
-r=1
-n=N
-Res.7 <- SimMultNormal(M = M, n = N, p0 = 0.95)
-Res.8 <- SimMultNormal(M = M, n = N, p0 = 0.90)
-Res.9 <- SimMultNormal(M = M, n = N, p0 = 0.80)
-
+M <- 500 #1
+N <- 1000 #20000
+#p0=0.95
+#r=1
+#n=N
+time.7<-system.time(Res.7 <- SimMultNormal(M = M, n = N, p0 = 0.95))
+time.8<-system.time(Res.8 <- SimMultNormal(M = M, n = N, p0 = 0.90))
+time.9<-system.time(Res.9 <- SimMultNormal(M = M, n = N, p0 = 0.80))
+save.image(file = "SimMultiNormal.RData")
+time.9
 
 
 ##debug
@@ -114,11 +116,9 @@ options(error=recover)
 fmlcd(X=X, w=w)
 ##
 
-save.image(file = "SimMultiNormal.RData")
-
-#png(file = "MultiNormalp95.png", height = 600, width = 900)
+png(file = "MultiNormalp95.png", height = 600, width = 900)
 Draw.boxplotsM(Res.7)
-#dev.off()
+dev.off()
 
 #png(file = "MultiNormalp90.png", height = 600, width = 900)
 Draw.boxplotsM(Res.8)
