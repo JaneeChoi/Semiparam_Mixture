@@ -1,11 +1,8 @@
 #source(file="SPMix-LocalFDR/SpMix.R")
 #source(file = 'test_case/fmlogcondens_test/sp.mix.multi.fmlogcondens.R')
 
-
-devtools::install_github("JaneeChoi/SpMix",build_vignettes = FALSE)
+devtools::install_github("JaneeChoi/SpMix")
 library(SpMix)
-
-#library(fmlogcondens)
 
 Draw.boxplotsM <- function(Obj)
 {
@@ -35,12 +32,6 @@ SimMultNormal <- function(M, n, p0)
   result <- data.frame(p0hat = rep(NA, M),
                        Sensitivity = rep(NA, M),
                        Specificity = rep(NA, M))
-  result.1D.1 <- data.frame(p0hat = rep(NA, M),
-                            Sensitivity = rep(NA, M),
-                            Specificity = rep(NA, M))
-  result.1D.2 <- data.frame(p0hat = rep(NA, M),
-                            Sensitivity = rep(NA, M),
-                            Specificity = rep(NA, M))
   
   for ( r in 1:M ) {
     cat(r, "/", M, "\n")
@@ -64,39 +55,14 @@ SimMultNormal <- function(M, n, p0)
     result$p0hat.SP[r] <- p0hat
     result$Sensitivity[r] <- TP/(TP + FN)
     result$Specificity[r] <- TN/(TN + FP)
-    
-    res <- sp.mix.1D(z[,1], doplot = FALSE)
-    
-    p0hat <- res$p.0
-    Nhat <- as.integer(res$localfdr <= 0.2)
-    TP <- sum(Nhat[-(1:n0)] == 1)
-    TN <- sum(Nhat[1:n0] == 0)
-    FP <- n0 - TN
-    FN <- n1 - TP
-    result.1D.1$p0hat.SP[r] <- p0hat
-    result.1D.1$Sensitivity[r] <- TP/(TP + FN)
-    result.1D.1$Specificity[r] <- TN/(TN + FP)
-    
-    res <- sp.mix.1D(z[,2], doplot = FALSE)
-    p0hat <- res$p.0
-    Nhat <- as.integer(res$localfdr <= 0.2)
-    TP <- sum(Nhat[-(1:n0)] == 1)
-    TN <- sum(Nhat[1:n0] == 0)
-    FP <- n0 - TN
-    FN <- n1 - TP
-    result.1D.2$p0hat.SP[r] <- p0hat
-    result.1D.2$Sensitivity[r] <- TP/(TP + FN)
-    result.1D.2$Specificity[r] <- TN/(TN + FP)
   }
   
-  return(list(res2D = result, 
-              res1D.1 = result.1D.1, 
-              res1D.2 = result.1D.2))
+  return(result)
 }
 
 
-M <- 500 #1
-N <- 1000 #20000
+M <- 1 #1
+N <- 100 #20000
 #p0=0.95
 #r=1
 #n=N
@@ -104,7 +70,30 @@ time.7<-system.time(Res.7 <- SimMultNormal(M = M, n = N, p0 = 0.95))
 time.8<-system.time(Res.8 <- SimMultNormal(M = M, n = N, p0 = 0.90))
 time.9<-system.time(Res.9 <- SimMultNormal(M = M, n = N, p0 = 0.80))
 save.image(file = "SimMultiNormal.RData")
-time.9
+
+time.df<-data.frame(N=0,time95=0,time90=0,time80=0)
+
+for (N in c(100,500,1000,5000,10000,150000,20000,25000)){
+  time1<-system.time(SimMultNormal(M = M, n = N, p0 = 0.95))[3]
+  print("finish 1")
+  time2<-system.time(SimMultNormal(M = M, n = N, p0 = 0.90))[3]
+  print("finish 2")
+  time3<-system.time(SimMultNormal(M = M, n = N, p0 = 0.80))[3]
+  print("finish 3")
+  time.df<-rbind(time.df,c(N,time1,time2,time3))
+  write.csv(c(N,time1,time2,time3),paste0("time of ",N,".csv"))
+  print("finish")
+  print(N)
+}
+
+
+time.10<-system.time(Res.10 <- SimMultNormal(M = M, n = N, p0 = 0.95))
+time.11<-system.time(Res.11 <- SimMultNormal(M = M, n = N, p0 = 0.90))
+time.12<-system.time(Res.12 <- SimMultNormal(M = M, n = N, p0 = 0.80))
+save.image(file = "SimMultiNormal_2.RData")
+
+time.12
+
 
 
 ##debug

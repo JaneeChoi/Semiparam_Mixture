@@ -1,10 +1,15 @@
-devtools::install_github("FabianRathke/fmlogcondens")
-
-devtools::install_github("JaneeChoi/SpMix",ref="fmlogcondens",build_vignettes = FALSE)
-devtools::install_github("JaneeChoi/SpMix")
-
+library(fmlogcondens)
+library(mvtnorm)
 library(SpMix)
 
+
+tol = 5e-6
+max.iter = 30
+mono = TRUE
+thre.z = 0.9
+Uthre.gam = 0.9
+Lthre.gam = 0.01
+z=read.csv("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/sp.mix.multi_z.csv")[,-1]
 
 sp.mix.multi <- function(z, tol = 5e-6, max.iter = 30, mono = TRUE, thre.z = 0.9, Uthre.gam = 0.9, Lthre.gam = 0.01)
   # FOR MULTIVARIATE CASE ONLY
@@ -41,7 +46,7 @@ sp.mix.multi <- function(z, tol = 5e-6, max.iter = 30, mono = TRUE, thre.z = 0.9
     weight <- 1 - new.gam
     new.f1.tilde <- rep(0, n)
     which.z <- (new.gam <= thre.z)
-    lcd <- fmlcd(X=z[which.z,], w = weight[which.z]/sum(weight[which.z]))
+    lcd <- fmlogcondens::fmlcd(X=z[which.z,], w = weight[which.z]/sum(weight[which.z]))
     new.f1.tilde[which.z] <- exp(lcd$y)
     
     ## Update
