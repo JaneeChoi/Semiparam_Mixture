@@ -3,6 +3,7 @@
 
 devtools::install_github("JaneeChoi/SpMix")
 library(SpMix)
+set.seed(210828)
 
 Draw.boxplotsM <- function(Obj)
 {
@@ -61,49 +62,67 @@ SimMultNormal <- function(M, n, p0)
 }
 
 
-M <- 1 #1
-N <- 100 #20000
-#p0=0.95
-#r=1
-#n=N
-time.7<-system.time(Res.7 <- SimMultNormal(M = M, n = N, p0 = 0.95))
-time.8<-system.time(Res.8 <- SimMultNormal(M = M, n = N, p0 = 0.90))
-time.9<-system.time(Res.9 <- SimMultNormal(M = M, n = N, p0 = 0.80))
-save.image(file = "SimMultiNormal.RData")
+M <- 1
 
-time.df<-data.frame(N=0,time95=0,time90=0,time80=0)
 
-for (N in c(100,500,1000,5000,10000,150000,20000,25000)){
-  time1<-system.time(SimMultNormal(M = M, n = N, p0 = 0.95))[3]
+for (N in c(100,500,1000,5000,10000,15000,20000,25000)){
+  time1<-system.time(Res.1<-SimMultNormal(M = M, n = N, p0 = 0.95))[3]
   print("finish 1")
-  time2<-system.time(SimMultNormal(M = M, n = N, p0 = 0.90))[3]
+  time2<-system.time(Res.2<-SimMultNormal(M = M, n = N, p0 = 0.90))[3]
   print("finish 2")
-  time3<-system.time(SimMultNormal(M = M, n = N, p0 = 0.80))[3]
+  time3<-system.time(Res.3<-SimMultNormal(M = M, n = N, p0 = 0.80))[3]
   print("finish 3")
-  time.df<-rbind(time.df,c(N,time1,time2,time3))
-  write.csv(c(N,time1,time2,time3),paste0("time of ",N,".csv"))
+  result_df<-data.frame(res1<-c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2<-c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3<-c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
+  write.csv(result_df,paste0("result_",N,".csv"))
+  print("finish")
+  print(N)
+}
+
+# sp.mix.multi using fmlogcondens
+
+devtools::install_github("JaneeChoi/SpMix",ref = "fmlogcondens")
+library(SpMix)
+set.seed(210828)
+
+M <- 1
+setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/Multi_Normal_fmlogcondens")
+for (N in c(100,500,1000,5000,10000,15000,20000,25000)){
+  time1<-system.time(Res.1<-SimMultNormal(M = M, n = N, p0 = 0.95))[3]
+  print("finish 1")
+  time2<-system.time(Res.2<-SimMultNormal(M = M, n = N, p0 = 0.90))[3]
+  print("finish 2")
+  time3<-system.time(Res.3<-SimMultNormal(M = M, n = N, p0 = 0.80))[3]
+  print("finish 3")
+  result_df<-data.frame(res1<-c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2<-c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3<-c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
+  write.csv(result_df,paste0("result_",N,".csv"))
+  print("finish")
+  print(N)
+}
+
+# sp.mix.multi using fmlogcondens
+
+devtools::install_github("JaneeChoi/SpMix",ref = "fmlogcondens")
+library(SpMix)
+set.seed(210828)
+
+M <- 1
+setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/Multi_Gamma_fmlogcondens")
+for (N in c(100,500,1000,5000,10000,15000,20000,25000)){
+  time1<-system.time(Res.1<-SimMultNormal(M = M, n = N, p0 = 0.95))[3]
+  print("finish 1")
+  time2<-system.time(Res.2<-SimMultNormal(M = M, n = N, p0 = 0.90))[3]
+  print("finish 2")
+  time3<-system.time(Res.3<-SimMultNormal(M = M, n = N, p0 = 0.80))[3]
+  print("finish 3")
+  result_df<-data.frame(res1<-c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2<-c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3<-c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
+  write.csv(result_df,paste0("result_gamma_",N,".csv"))
   print("finish")
   print(N)
 }
 
 
-time.10<-system.time(Res.10 <- SimMultNormal(M = M, n = N, p0 = 0.95))
-time.11<-system.time(Res.11 <- SimMultNormal(M = M, n = N, p0 = 0.90))
-time.12<-system.time(Res.12 <- SimMultNormal(M = M, n = N, p0 = 0.80))
-save.image(file = "SimMultiNormal_2.RData")
 
-time.12
-
-
-
-##debug
-setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test")
-library(fmlogcondens)
-X=as.matrix(read.csv("fmlcd_X.csv")[,2:3])
-w=read.csv("fmlcd_w.csv")[,2]
-options(error=recover)
-fmlcd(X=X, w=w)
-##
+# Draw boxplot
 
 png(file = "MultiNormalp95.png", height = 600, width = 900)
 Draw.boxplotsM(Res.7)

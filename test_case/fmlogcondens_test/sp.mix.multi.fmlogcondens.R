@@ -2,7 +2,6 @@ library(fmlogcondens)
 library(mvtnorm)
 library(SpMix)
 
-
 tol = 5e-6
 max.iter = 30
 mono = TRUE

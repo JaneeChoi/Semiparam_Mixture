@@ -26,12 +26,6 @@ SimMultGamma <- function(M, n, p0)
   result <- data.frame(p0hat.SP = rep(NA, M),
                        Sensitivity = rep(NA, M),
                        Specificity = rep(NA, M))
-  result.1D.1 <- data.frame(p0hat.SP = rep(NA, M),
-                            Sensitivity = rep(NA, M),
-                            Specificity = rep(NA, M))
-  result.1D.2 <- data.frame(p0hat.SP = rep(NA, M),
-                            Sensitivity = rep(NA, M),
-                            Specificity = rep(NA, M))
   
   for ( r in 1:M ) {
     cat(r, "/", M, "\n")
@@ -54,38 +48,52 @@ SimMultGamma <- function(M, n, p0)
     result$Sensitivity[r] <- TP/(TP + FN)
     result$Specificity[r] <- TN/(TN + FP)
     
-    res <- sp.mix.1D(z[,1], doplot = FALSE)
-    
-    p0hat <- res$p.0
-    Nhat <- as.integer(res$localfdr <= 0.2)
-    TP <- sum(Nhat[-(1:n0)] == 1)
-    TN <- sum(Nhat[1:n0] == 0)
-    FP <- n0 - TN
-    FN <- n1 - TP
-    result.1D.1$p0hat.SP[r] <- p0hat
-    result.1D.1$Sensitivity[r] <- TP/(TP + FN)
-    result.1D.1$Specificity[r] <- TN/(TN + FP)
-    
-    res <- sp.mix.1D(z[,2], doplot = FALSE)
-    p0hat <- res$p.0
-    Nhat <- as.integer(res$localfdr <= 0.2)
-    TP <- sum(Nhat[-(1:n0)] == 1)
-    TN <- sum(Nhat[1:n0] == 0)
-    FP <- n0 - TN
-    FN <- n1 - TP
-    result.1D.2$p0hat.SP[r] <- p0hat
-    result.1D.2$Sensitivity[r] <- TP/(TP + FN)
-    result.1D.2$Specificity[r] <- TN/(TN + FP)
   }
   
-  return(list(res2D = result, 
-              res1D.1 = result.1D.1, 
-              res1D.2 = result.1D.2))
+  return(result)
 }
 
-source(file = '../SpMix.R')
+# source(file = '../SpMix.R')
+set.seed(210828)
+M <- 1
+setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/Multi_Gamma_LocConcDEAD")
+for (N in c(10000,15000,20000,25000)){
+  time1<-system.time(Res.1<-SimMultGamma(M = M, n = N, p0 = 0.95))[3]
+  print("finish 1")
+  time2<-system.time(Res.2<-SimMultGamma(M = M, n = N, p0 = 0.90))[3]
+  print("finish 2")
+  time3<-system.time(Res.3<-SimMultGamma(M = M, n = N, p0 = 0.80))[3]
+  print("finish 3")
+  result_df<-data.frame(res1=c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2=c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3=c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
+  write.csv(result_df,paste0("result_gamma_",N,".csv"))
+  print("finish")
+  print(N)
+}
 
-M <- 50
+# sp.mix.multi using fmlogcondens
+
+devtools::install_github("JaneeChoi/SpMix",ref = "fmlogcondens")
+library(SpMix)
+set.seed(210828)
+
+M <- 1
+setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/Multi_Gamma_fmlogcondens")
+for (N in c(100,500,1000,5000,10000,15000,20000,25000)){
+  time1<-system.time(Res.1<-SimMultNormal(M = M, n = N, p0 = 0.95))[3]
+  print("finish 1")
+  time2<-system.time(Res.2<-SimMultNormal(M = M, n = N, p0 = 0.90))[3]
+  print("finish 2")
+  time3<-system.time(Res.3<-SimMultNormal(M = M, n = N, p0 = 0.80))[3]
+  print("finish 3")
+  result_df<-data.frame(res1<-c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2<-c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3<-c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
+  write.csv(result_df,paste0("result_gamma_",N,".csv"))
+  print("finish")
+  print(N)
+}
+
+# boxplot for sensitivity
+
+M <- 50 
 N <- 1000
 Res.10 <- SimMultGamma(M = M, n = N, p0 = 0.95)
 Res.11 <- SimMultGamma(M = M, n = N, p0 = 0.90)
