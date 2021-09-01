@@ -38,8 +38,7 @@ SimMultNormal <- function(M, n, p0)
     cat(r, "/", M, "\n")
     n0 <- rbinom(1, n, p0)
     n1 <- n - n0
-    V <- rCopula(n1, ellipCopula(family = "normal", 
-                                 param = param, dim = 2))
+    V <- rCopula(n1, ellipCopula(family = "normal", param = param, dim = 2))
     z0 <- rmvnorm(n0, sigma = Sigma0)
     z1 <- qnorm(V, mean = 3.5, sd = .5)
     z <- rbind(z0, z1)
@@ -63,6 +62,9 @@ SimMultNormal <- function(M, n, p0)
 
 
 M <- 1
+r=1
+p0=0.95
+n=100
 
 
 for (N in c(100,500,1000,5000,10000,15000,20000,25000)){
@@ -83,6 +85,8 @@ for (N in c(100,500,1000,5000,10000,15000,20000,25000)){
 devtools::install_github("JaneeChoi/SpMix",ref = "fmlogcondens")
 library(SpMix)
 set.seed(210828)
+
+time1<-system.time(Res.1<-SimMultNormal(M = M, n = 100, p0 = 0.95))[3]
 
 M <- 1
 setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/Multi_Normal_fmlogcondens")
