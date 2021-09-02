@@ -60,19 +60,81 @@ SimMultNormal <- function(M, n, p0)
   return(result)
 }
 
+SimMultNormal3d <- function(M, n, p0)
+  # [Multivariate] Null: Normal, Nonnull: Normal
+{
+  library(copula)
+  param <- 0.5
+  
+  library(mvtnorm)
+  rho12 <- 0.25
+  rho13 <- 0.25
+  rho23 <- 0.25
+  Sigma0 <- matrix(c(1, rho12, rho13,
+                     rho12, 1, rho23,
+                     rho13,rho23,1), 
+                   ncol = 3, byrow = T)
+  
+  result <- data.frame(p0hat = rep(NA, M),
+                       Sensitivity = rep(NA, M),
+                       Specificity = rep(NA, M))
+  
+  library(scatterplot3d)
+  
+  for ( r in 1:M ) {
+    cat(r, "/", M, "\n")
+    n0 <- rbinom(1, n, p0)
+    n1 <- n - n0
+    V <- rCopula(n1, ellipCopula(family = "normal", param = param, dim = 3))
+    z0 <- rmvnorm(n0, sigma = Sigma0)
+    z1 <- qnorm(V, mean = 3.5, sd = .5)
+    z <- rbind(z0, z1)
+    scatterplot3d(z, color = c(rep(1, n0), rep(2, n1)), pch = 20)
+    
+    res <- sp.mix.multi(z)
+    
+    p0hat <- res$p.0
+    Nhat <- as.integer(res$localfdr <= 0.2)
+    TP <- sum(Nhat[-(1:n0)] == 1)
+    TN <- sum(Nhat[1:n0] == 0)
+    FP <- n0 - TN
+    FN <- n1 - TP
+    result$p0hat.SP[r] <- p0hat
+    result$Sensitivity[r] <- TP/(TP + FN)
+    result$Specificity[r] <- TN/(TN + FP)
+  }
+  
+  return(result)
+}
+
+
+# 3d normal/gamma
 
 M <- 1
-r=1
-p0=0.95
-n=100
 
+setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/3d_Normal_LocConcDEAD")
 
-for (N in c(100,500,1000,5000,10000,15000,20000,25000)){
-  time1<-system.time(Res.1<-SimMultNormal(M = M, n = N, p0 = 0.95))[3]
+for (N in c(100,500,1000,5000,10000,15000,20000)){
+  time1<-system.time(Res.1<-SimMultNormal3d(M = M, n = N, p0 = 0.95))[3]
   print("finish 1")
-  time2<-system.time(Res.2<-SimMultNormal(M = M, n = N, p0 = 0.90))[3]
+  time2<-system.time(Res.2<-SimMultNormal3d(M = M, n = N, p0 = 0.90))[3]
   print("finish 2")
-  time3<-system.time(Res.3<-SimMultNormal(M = M, n = N, p0 = 0.80))[3]
+  time3<-system.time(Res.3<-SimMultNormal3d(M = M, n = N, p0 = 0.80))[3]
+  print("finish 3")
+  result_df<-data.frame(res1<-c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2<-c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3<-c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
+  write.csv(result_df,paste0("result_",N,".csv"))
+  print("finish")
+  print(N)
+}
+
+setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/3d_Gamma_LocConcDEAD")
+
+for (N in c(100,500,1000,5000)){
+  time1<-system.time(Res.1<-SimMultGamma3d(M = M, n = N, p0 = 0.95))[3]
+  print("finish 1")
+  time2<-system.time(Res.2<-SimMultGamma3d(M = M, n = N, p0 = 0.90))[3]
+  print("finish 2")
+  time3<-system.time(Res.3<-SimMultGamma3d(M = M, n = N, p0 = 0.80))[3]
   print("finish 3")
   result_df<-data.frame(res1<-c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2<-c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3<-c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
   write.csv(result_df,paste0("result_",N,".csv"))
@@ -86,7 +148,7 @@ devtools::install_github("JaneeChoi/SpMix",ref = "fmlogcondens")
 library(SpMix)
 set.seed(210828)
 
-time1<-system.time(Res.1<-SimMultNormal(M = M, n = 100, p0 = 0.95))[3]
+time1<-system.time(Res.1<-SimMultNormal(M = M, n = 100, p0 = 0.90))[3]
 
 M <- 1
 setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/Multi_Normal_fmlogcondens")

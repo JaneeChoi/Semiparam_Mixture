@@ -53,6 +53,53 @@ SimMultGamma <- function(M, n, p0)
   return(result)
 }
 
+SimMultGamma3d <- function(M, n, p0)
+  # [Multivariate] Null: Normal, Nonnull: Normal
+{
+  library(copula)
+  param <- 2
+  
+  rho12 <- 0.25
+  rho13 <- 0.25
+  rho23 <- 0.25
+  Sigma0 <- matrix(c(1, rho12, rho13,
+                     rho12, 1, rho23,
+                     rho13,rho23,1), 
+                   ncol = 3, byrow = T)
+  
+  library(mvtnorm)
+  
+  result <- data.frame(p0hat.SP = rep(NA, M),
+                       Sensitivity = rep(NA, M),
+                       Specificity = rep(NA, M))
+  library(scatterplot3d)
+  
+  for ( r in 1:M ) {
+    cat(r, "/", M, "\n")
+    n0 <- rbinom(1, n, p0)
+    n1 <- n - n0
+    V <- rCopula(n1, frankCopula(param = param, dim = 3))
+    z0 <- rmvnorm(n0, sigma = Sigma0)
+    z1 <- qgamma(V, shape = 12, rate = 4)
+    z <- rbind(z0, z1)
+    scatterplot3d(z, color = c(rep(1, n0), rep(2, n1)), pch = 20)
+    
+    res <- sp.mix.multi(z)
+    p0hat <- res$p.0
+    Nhat <- as.integer(res$localfdr <= 0.2)
+    TP <- sum(Nhat[-(1:n0)] == 1)
+    TN <- sum(Nhat[1:n0] == 0)
+    FP <- n0 - TN
+    FN <- n1 - TP
+    result$p0hat.SP[r] <- p0hat
+    result$Sensitivity[r] <- TP/(TP + FN)
+    result$Specificity[r] <- TN/(TN + FP)
+    
+  }
+  
+  return(result)
+}
+
 # source(file = '../SpMix.R')
 set.seed(210828)
 M <- 1
