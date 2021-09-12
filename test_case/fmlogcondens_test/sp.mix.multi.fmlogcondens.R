@@ -8,7 +8,7 @@ mono = TRUE
 thre.z = 0.9
 Uthre.gam = 0.9
 Lthre.gam = 0.01
-z=read.csv("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/sp.mix.multi_z.csv")[,-1]
+z=read.csv("/Users/user/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/sp.mix.multi_z.csv")[,-1]
 
 sp.mix.multi <- function(z, tol = 5e-6, max.iter = 30, mono = TRUE, thre.z = 0.9, Uthre.gam = 0.9, Lthre.gam = 0.01)
   # FOR MULTIVARIATE CASE ONLY

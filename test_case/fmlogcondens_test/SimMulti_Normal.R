@@ -114,15 +114,16 @@ M <- 1
 
 setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/3d_Normal_LocConcDEAD")
 
-for (N in c(100,500,1000,5000,10000,15000,20000)){
-  time1<-system.time(Res.1<-SimMultNormal3d(M = M, n = N, p0 = 0.95))[3]
+for (N in c(100,500)){
+  time1<-system.time(Res.1<-SimMultNormal(M = M, n = N, p0 = 0.95))[3]
   print("finish 1")
-  time2<-system.time(Res.2<-SimMultNormal3d(M = M, n = N, p0 = 0.90))[3]
+  time2<-system.time(Res.2<-SimMultNormal(M = M, n = N, p0 = 0.90))[3]
   print("finish 2")
-  time3<-system.time(Res.3<-SimMultNormal3d(M = M, n = N, p0 = 0.80))[3]
+  time3<-system.time(Res.3<-SimMultNormal(M = M, n = N, p0 = 0.80))[3]
   print("finish 3")
-  result_df<-data.frame(res1<-c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2<-c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3<-c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
-  write.csv(result_df,paste0("result_",N,".csv"))
+  result_df<-data.frame(res1=c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2=c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3=c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
+  #write.csv(result_df,paste0("result_",N,".csv"))
+  print(result_df)
   print("finish")
   print(N)
 }
@@ -144,7 +145,8 @@ for (N in c(100,500,1000,5000)){
 
 # sp.mix.multi using fmlogcondens
 
-devtools::install_github("JaneeChoi/SpMix",ref = "fmlogcondens")
+devtools::install_github("FabianRathke/fmlogcondens")
+devtools::install_github("JaneeChoi/SpMix",ref = "fmlogcondens_merge",force=TRUE)
 library(SpMix)
 set.seed(210828)
 
@@ -167,12 +169,12 @@ for (N in c(100,500,1000,5000,10000,15000,20000,25000)){
 
 # sp.mix.multi using fmlogcondens
 
-devtools::install_github("JaneeChoi/SpMix",ref = "fmlogcondens")
+devtools::install_github("JaneeChoi/SpMix",ref = "fmlogcondens_merge")
 library(SpMix)
 set.seed(210828)
 
 M <- 1
-setwd("/Users/choiiiiii/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/Multi_Gamma_fmlogcondens")
+setwd("/Users/user/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/2d_Normal_fmlogcondens")
 for (N in c(100,500,1000,5000,10000,15000,20000,25000)){
   time1<-system.time(Res.1<-SimMultNormal(M = M, n = N, p0 = 0.95))[3]
   print("finish 1")
@@ -180,8 +182,9 @@ for (N in c(100,500,1000,5000,10000,15000,20000,25000)){
   print("finish 2")
   time3<-system.time(Res.3<-SimMultNormal(M = M, n = N, p0 = 0.80))[3]
   print("finish 3")
-  result_df<-data.frame(res1<-c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2<-c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3<-c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
-  write.csv(result_df,paste0("result_gamma_",N,".csv"))
+  result_df<-data.frame(res1=c(time1,Res.1$p0hat.SP[1],Res.1$Sensitivity[1],Res.1$Specificity[1]),res2=c(time2,Res.2$p0hat.SP[1],Res.2$Sensitivity[1],Res.2$Specificity[1]),res3=c(time3,Res.3$p0hat.SP[1],Res.3$Sensitivity[1],Res.3$Specificity[1]))
+  write.csv(result_df,paste0("result_Normal_",N,".csv"))
+  print(result_df)
   print("finish")
   print(N)
 }
