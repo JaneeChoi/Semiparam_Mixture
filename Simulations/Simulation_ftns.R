@@ -1,3 +1,8 @@
+devtools::install_github("JaneeChoi/SpMix",ref = "fmlogcondens_merge")
+library(SpMix)
+set.seed(210828)
+
+
 Draw.boxplotsM <- function(Obj)
 {
   p0hat <- Obj$p0hat.SP
