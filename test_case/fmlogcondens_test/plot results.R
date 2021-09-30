@@ -81,4 +81,12 @@ p3
 ggsave("spec.png", plot=p1, height=6, width=8, dpi=600)
 
 
+# boxplot
 
+setwd("/Users/user/Documents/GitHub/Semiparam_Mixture/test_case/fmlogcondens_test/Results_faster")
+
+Gamma_2D_100<-read.csv("2D_Gamma_100.csv")[,-1]
+Gamma_2D_100_95<-Gamma_2D_100[1:100,]
+Gamma_2D_100_90<-Gamma_2D_100[101:200,]
+Gamma_2D_100_80<-Gamma_2D_100[201:300,]
+par(mfrow=c(3,3))
