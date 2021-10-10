@@ -53,7 +53,7 @@ SimMultNormal <- function(M, n, p0)
     TN <- sum(Nhat[1:n0] == 0)
     FP <- n0 - TN
     FN <- n1 - TP
-    result$p0hat.SP[r] <- p0hat
+    result$p0hat[r] <- p0hat
     result$Sensitivity[r] <- TP/(TP + FN)
     result$Specificity[r] <- TN/(TN + FP)
     result$t[r] <- runtime
@@ -99,7 +99,7 @@ SimMultNormal3d <- function(M, n, p0)
     TN <- sum(Nhat[1:n0] == 0)
     FP <- n0 - TN
     FN <- n1 - TP
-    result$p0hat.SP[r] <- p0hat
+    result$p0hat[r] <- p0hat
     result$Sensitivity[r] <- TP/(TP + FN)
     result$Specificity[r] <- TN/(TN + FP)
     result$t[r] <- runtime
@@ -144,7 +144,7 @@ SimMultGamma <- function(M, n, p0)
     TN <- sum(Nhat[1:n0] == 0)
     FP <- n0 - TN
     FN <- n1 - TP
-    result$p0hat.SP[r] <- p0hat
+    result$p0hat[r] <- p0hat
     result$Sensitivity[r] <- TP/(TP + FN)
     result$Specificity[r] <- TN/(TN + FP)
     result$t[r] <- runtime
@@ -191,7 +191,7 @@ SimMultGamma3d <- function(M, n, p0)
     TN <- sum(Nhat[1:n0] == 0)
     FP <- n0 - TN
     FN <- n1 - TP
-    result$p0hat.SP[r] <- p0hat
+    result$p0hat[r] <- p0hat
     result$Sensitivity[r] <- TP/(TP + FN)
     result$Specificity[r] <- TN/(TN + FP)
     result$t[r] <- runtime
