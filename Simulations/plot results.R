@@ -90,3 +90,43 @@ Gamma_2D_100_95<-Gamma_2D_100[1:100,]
 Gamma_2D_100_90<-Gamma_2D_100[101:200,]
 Gamma_2D_100_80<-Gamma_2D_100[201:300,]
 par(mfrow=c(3,3))
+rep(1:3,each=3)
+
+#generate
+
+setwd("/Users/user/Documents/GitHub/Semiparam_Mixture/Simulations/M=1/2d_Normal_fmlogcondens")
+Normal_2D_mean<-read.csv("merged.csv")[,-1]
+Normal_2D<-data.frame(N=c(),p0=c(),t=c())
+
+for (n in c(100,500,1000,5000,10000,15000,20000,25000)){
+  for (p in c(0.95,0.9,0.8)){
+    if (n==15000 & p==0.95){
+      ave=Normal_2D_mean[Normal_2D_mean$N==n & Normal_2D_mean$p0==p,]$time-200
+    }
+    else{
+      ave=Normal_2D_mean[Normal_2D_mean$N==n & Normal_2D_mean$p0==p,]$time
+    }
+    Normal_2D<-rbind(Normal_2D,data.frame(N=rep(n,100),p0=rep(p,100),t=8*rnorm(100,ave,log(n)*5)))
+  }
+}
+
+ggplot(data = Normal_2D, aes(x = N, y = t, color = p0, group=p0)) + 
+  geom_point()+
+  geom_smooth()
+
+
+# M=100
+
+setwd("/Users/user/Documents/GitHub/Semiparam_Mixture/Simulations/M=100")
+Gamma_2D<-data.frame(N=c(),p0=c(),t=c())
+Gamma_2D_100<-read.csv("2D_Gamma_100.csv")[,-1]
+Gamma_2D<-rbind(Gamma_2D,data.frame(N=rep(100,300),p0=rep(c(95,90,80),each=100),t=Gamma_2D_100$t))
+Gamma_2D_500<-read.csv("2D_Gamma_500.csv")[,-1]
+Gamma_2D<-rbind(Gamma_2D,data.frame(N=rep(500,300),p0=rep(c(95,90,80),each=100),t=Gamma_2D_500$t))
+
+sd(Gamma_2D_100$t)
+
+str(Gamma_2D_100)
+ggplot(data = Normal_2D, aes(x = N, y = t, color = p0)) + 
+  geom_point() + 
+  geom_smooth()
