@@ -1,11 +1,11 @@
-rv<-read.table("/Users/user/Downloads/rvdata_for_stat.txt", skip = 1)
+rv<-read.table("/Users/user/Documents/GitHub/Semiparam_Mixture/Galaxy/rvdata_for_stat.txt", skip = 1)
 z_vel = scale(rv$V2)[,1]
 length(z_vel)
 hist(z_vel,breaks=24,main="z-value for velocity",xlab="z-value")
 
 dim(z)[2]
 library(multiLocalFDR)
-
+library(LogConcDEAD)
 
 
 library(mclust)
@@ -257,6 +257,137 @@ sp.mix.1D <- function(z, tol = 5.0e-6, max.iter = 30, doplot = TRUE, thre.localF
   return(res)
 }
 
+library(ggpubr)
+library(cowplot)
+
+
+  #library(LogConcDEAD)
+  library(logcondens)
+  
+  z <- as.numeric(z)
+  n <- length(z)
+  
+  ## Initial step
+  q0 <- quantile(z, probs = .9)
+  p.0 <- mean(z >= q0)
+  mu.0 <- mean(z[z >= q0])
+  sig.0 <- sd(z[z >= q0])
+  
+  mu.1 <- mean(z[z < q0])
+  sig.1 <- sd(z[z < q0])
+  f1.tilde <- dnorm(z, mean = mu.1, sd = sig.1)
+  
+  f <- gam <- rep(0, n)
+  
+  ## EM-step
+  k <- 0; converged <- 0
+  while ( (k < 3) | ((k < max.iter) & (!converged)) ) {
+    k <- k + 1
+    ## E-step
+    tmp <- p.0*dnorm(z, mu.0, sig.0)
+    new.f <- tmp + (1 - p.0)*f1.tilde
+    new.gam <- tmp/new.f
+    
+    ## M-step
+    w.gam <- new.gam/sum(new.gam, na.rm = TRUE)
+    new.mu.0 <- sum(w.gam*z, na.rm = TRUE)
+    new.sig.0 <- sqrt(sum(w.gam*(z-new.mu.0)^2, na.rm = TRUE))
+    new.p.0 <- mean(new.gam, na.rm = TRUE)
+    
+    new.f1.tilde <- rep(0, n)
+    which.z <- new.gam <= thre.z
+    weight <- 1 - new.gam[which.z]
+    weight <- weight/sum(weight)
+    lcd <- mlelcd(x = z[which.z], w = weight)
+    new.f1.tilde[which.z] <- exp(lcd$logMLE)[rank(z[which.z])]
+    which.gam <- (new.gam <= Uthre.gam)*(new.gam >= Lthre.gam)
+    diff <- max(abs(gam - new.gam)[which.gam])
+    converged <- (diff <= tol)
+    cat("   EM iteration:", k, ", Change in 1dfdr fit = ", round(diff, 5), "\n")
+    p.0 <- new.p.0; mu.0 <- new.mu.0; sig.0 <- new.sig.0
+    f1.tilde <- new.f1.tilde; gam <- new.gam; f <- new.f
+  }
+  
+  which.z <- gam <= thre.localFDR
+  thre <- max(z[which.z])
+  
+  if (doplot) {
+    hist(z,
+         nclass = 100,
+         probability = TRUE,
+         col = "gray", border = "white",
+         xlab = "",
+         main = "",
+         sub = substitute(
+           paste(p[0], " = ", p0, ", ",
+                 mu[0], " = ", mu0, ", ",
+                 sigma[0], " = ", sigma0, ", ",
+                 "threshold = ", threshold,
+                 sep = ""),
+           list(p0 = round(p.0, 2),
+                mu0 = round(mu.0, digits = 2),
+                sigma0 = round(sig.0, digits = 2),
+                threshold = round(thre, digits = 2))))
+    rug(z, col = "#00AFBB")
+    rug(z[which.z], col = "#E7B800")
+    zs <- sort(z)
+    
+    lines(zs, p.0*dnorm(zs, mean = mu.0, sd = sig.0), col = "#00AFBB", lwd = 2)
+    lines(zs, (1-p.0)*f1.tilde[order(z)], col = "#E7B800", lwd = 2)
+    points(thre, 0, bg = "yellow", col = "#E7B800", pch = 25)
+    abline(v=mu.0,col="#00AFBB",lty='dashed')
+  }
+  
+  res <- list(p.0 = p.0, mu.0 = mu.0, sig.0 = sig.0, f = f,
+              localfdr = gam, iter = k)
+
+
 sp.mix.1D(z_vel, tol = 5.0e-6, max.iter = 30, doplot = TRUE, thre.localFDR = 0.2, thre.z = 0.95, Uthre.gam = 0.9, Lthre.gam = 0.01)
+
+sp.mix.new(z_vel, tol = 5.0e-6, max.iter = 30, doplot = TRUE, thre.localFDR = 0.2, thre.z = 0.95, Uthre.gam = 0.9, Lthre.gam = 0.01)
+
+z=z_vel
+tol = 5.0e-6
+max.iter = 30
+doplot = TRUE
+thre.localFDR = 0.2
+thre.z = 0.95
+Uthre.gam = 0.9
+Lthre.gam = 0.01
+p.0 = left$p0
+gam=left$localFDR
+mu.0 = left$mu0
+sig.0 = left$sig0
+f1.tilde = left$f1
+library(ggplot2)
+
+df=data.frame(z=z,)
+
+ggplot(df) + 
+  geom_histogram(breaks=10,aes(x=vector,y=..density..), position="identity") + 
+  geom_density(aes(x=vector,y=..density..))
+
+ggplot(df,aes(x=z)) + 
+  geom_histogram(aes(y = ..density..),colour = 1, fill = "white",bins=100) +
+  geom_line(aes(sort(z), p.0*dnorm(zs, mean = mu.0, sd = sig.0)),color = "#E7B800",lwd=1.2) +
+  geom_line(aes(sort(z), (1-p.0)*f1.tilde[order(z)]),color = "#00AFBB",lwd=1.2) +
+  geom_vline(aes(xintercept=mu.0), color="#E7B800",linetype="dashed") +
+  labs(x="z-value", y = "density")+
+  ggtitle(sub)+
+  geom_rug(aes(z), color = "#00AFBB") +
+  geom_rug(aes(z[which.z]), color = "#E7B800") +
+  geom_rug(alpha=0.7, position='jitter')+
+  theme_minimal() 
+  
+sub=substitute(
+  paste(p[0], " = ", p0, ", ",
+        mu[0], " = ", mu0, ", ",
+        sigma[0], " = ", sigma0, ", ",
+        "threshold = ", threshold,
+        sep = ""),
+  list(p0 = round(p.0, 2),
+       mu0 = round(mu.0, digits = 2),
+       sigma0 = round(sig.0, digits = 2),
+       threshold = round(thre, digits = 2)))
 
 
