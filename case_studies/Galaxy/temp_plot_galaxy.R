@@ -70,14 +70,14 @@ sp.mix.1D <- function(z, tol = 5.0e-6, max.iter = 30, doplot = TRUE, thre.localF
 
 gal_res=sp.mix.1D(z_vel, tol = 5.0e-6, max.iter = 5, doplot = FALSE, thre.localFDR = 0.2, thre.z = 0.95, Uthre.gam = 0.9, Lthre.gam = 0.01)
 
-
+gal_res = res
 z=z_vel
-p.0 = gal_res$p.0
-gam=gal_res$localfdr
-mu.0 = gal_res$mu.0
-sig.0 = gal_res$sig.0
-f1.tilde = gal_res$f
-which.z = gam <= 0.2
+p.0 = gal_res$p0
+gam=gal_res$localFDR
+mu.0 = gal_res$mu0
+sig.0 = gal_res$sig0
+f1.tilde = gal_res$f1
+which.z = (gam <= 0.2)
 thre=min(z[which.z])
 
 n=length(z)
@@ -109,7 +109,7 @@ zs <- sort(z)
 ggplot(df,aes(x=z)) + 
   geom_histogram(aes(y = ..density..),colour = 1, fill = "white",bins=100) +
   geom_line(aes(sort(z), p.0*dnorm(zs, mean = mu.0, sd = sig.0)),color = "#00BFC4",lwd=1.1) +
-  geom_line(aes(sort(z), (f1.tilde[order(z)]-p.0*dnorm(zs, mean = mu.0, sd = sig.0))),color = "#F8766D",lwd=1.1) +
+  geom_line(aes(sort(z), ((1-p.0)*f1.tilde[order(z)])),color = "#F8766D",lwd=1.1) +
   geom_vline(aes(xintercept=mu.0), color="#00BFC4",linetype="dashed") +
   geom_point(mapping = aes(x = thre, y = 0.01),size = 2,color='yellow',shape=25,fill="yellow") +
   labs(x="z-value", y = "density") +
