@@ -112,8 +112,44 @@ content(r)$args
 You can add custom headers to a request with `add_headers()`:
 
 ```{r, eval=FALSE}
-r <- GET("http://httpbin.org/get", add_headers(Name = "Hadley"))
-str(content(r)$headers)
+# Data
+data("galaxy", package = "multiLocalFDR")
+head(galaxy)
+
+> head(galaxy)
+radius  velocity
+1  9.900000 1034.0669
+2 20.129999 1013.8658
+3 12.640000 1055.4016
+4 12.160000  776.8124
+5  9.979999 1606.6024
+6 11.490000  774.1326
+```
+
+```{r, eval=FALSE}
+## transform to z-values
+z_galaxy <- scale(galaxy$velocity)[,1]
+head(z_galaxy)
+
+> head(z_galaxy)
+[1] 0.9969051 0.9579670 1.0380283 0.5010402 2.1004827 0.4958748
+```
+
+```{r, eval=FALSE}
+## SpMix for galaxy data
+params <- SpMix(z_galaxy, alternative = "less")
+
+> params <- SpMix(z_galaxy, alternative = "less")
+EM iteration: 1 , Change in fdr fit =  0.95717 
+EM iteration: 2 , Change in fdr fit =  0.04283 
+EM iteration: 3 , Change in fdr fit =  0 
+```
+
+```{r, eval=FALSE}
+## Plot results
+plotFDR(z_galaxy, params$p0, params$mu0, params$sig0, params$f1, 
+        params$localFDR, alternative = "less", thre_localFDR = 0.2, testing = FALSE)
+
 ```
 
 (Note that `content(r)$header` retrieves the headers that httpbin received. `headers(r)` gives the headers that it sent back in its response.)
