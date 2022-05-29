@@ -1,13 +1,17 @@
 library(SpMix)
 set.seed(990605)
 
+M=1
+n=1000
+p0=0.8
+
 SimMultNormal <- function(M, n, p0)
   # [Multivariate] Null: Normal, Nonnull: Normal
 {
   library(copula)
   param <- 0.5
   
-  library(mvtnorm)
+  library(mclust)
   rho12 <- 0.25
   Sigma0 <- matrix(c(1, rho12, 
                      rho12, 1), 
@@ -41,7 +45,6 @@ SimMultNormal <- function(M, n, p0)
     result$Specificity[r] <- TN/(TN + FP)
     result$t[r] <- runtime
   }
-  
   return(result)
 }
 

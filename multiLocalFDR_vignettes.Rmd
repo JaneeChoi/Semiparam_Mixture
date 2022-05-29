@@ -93,18 +93,124 @@ There are three ways to access the body of the request, all using `content()`:
 A common way of sending simple key-value pairs to the server is the query string: e.g. `http://httpbin.org/get?key=val`. httr allows you to provide these arguments as a named list with the `query` argument. For example, if you wanted to pass `key1=value1` and `key2=value2` to `http://httpbin.org/get` you could do:
 
 ```{r, eval=FALSE}
-r <- GET("http://httpbin.org/get", 
-  query = list(key1 = "value1", key2 = "value2")
-)
-content(r)$args
+## Data
+data("pathways", package = "multiLocalFDR")
+head(pathways)
+
+> head(pathways)
+                            Gene.Set        L         O         S
+1        Neutrophil degranulation(R) 3.14e-13 3.280e-09 1.110e-16
+2          Antimicrobial peptides(R) 7.69e-06 1.140e-03 1.310e-03
+3    Toll-Like Receptors Cascades(R) 1.85e-05 3.390e-03 2.780e-04
+4       Signaling by Interleukins(R) 8.91e-05 1.880e-05 8.240e-08
+5 Fructose and mannose metabolism(K) 4.21e-04 2.865e-01 4.490e-01
+6   IL4-mediated signaling events(N) 5.47e-04 5.040e-04 1.065e-01
+
 ```
 
 Any `NULL` elements are automatically dropped from the list, and both keys and values are escaped automatically.
 
-```{r}
-r <- GET("http://httpbin.org/get", 
-  query = list(key1 = "value 1", "key 2" = "value2", key2 = NULL))
-content(r)$args
+```{r, eval=FALSE}
+## SpMix for each pathway
+params_L <- SpMix(pathways[,2], p_value = TRUE, tol = 1e-10)
+
+> params_L <- SpMix(pathways[,2], p_value = TRUE, tol = 1e-10)
+   EM iteration: 1 , Change in fdr fit =  0 
+   EM iteration: 2 , Change in fdr fit =  0 
+   EM iteration: 3 , Change in fdr fit =  0 
+   EM iteration: 4 , Change in fdr fit =  0 
+   EM iteration: 5 , Change in fdr fit =  0 
+   EM iteration: 6 , Change in fdr fit =  0 
+   EM iteration: 7 , Change in fdr fit =  0 
+   
+params_O <- SpMix(pathways[,3], p_value = TRUE, tol = 1e-10)
+
+> params_O <- SpMix(pathways[,3], p_value = TRUE, tol = 1e-10)
+   EM iteration: 1 , Change in fdr fit =  0.00095 
+   EM iteration: 2 , Change in fdr fit =  0.00092 
+   EM iteration: 3 , Change in fdr fit =  0 
+   EM iteration: 4 , Change in fdr fit =  0 
+   EM iteration: 5 , Change in fdr fit =  0 
+   EM iteration: 6 , Change in fdr fit =  0 
+   EM iteration: 7 , Change in fdr fit =  0 
+   EM iteration: 8 , Change in fdr fit =  0 
+   EM iteration: 9 , Change in fdr fit =  0 
+   EM iteration: 10 , Change in fdr fit =  0 
+   EM iteration: 11 , Change in fdr fit =  0 
+   EM iteration: 12 , Change in fdr fit =  0 
+   EM iteration: 13 , Change in fdr fit =  0 
+   EM iteration: 14 , Change in fdr fit =  0 
+   EM iteration: 15 , Change in fdr fit =  0 
+   EM iteration: 16 , Change in fdr fit =  0 
+   EM iteration: 17 , Change in fdr fit =  0 
+   EM iteration: 18 , Change in fdr fit =  0 
+   EM iteration: 19 , Change in fdr fit =  0 
+   EM iteration: 20 , Change in fdr fit =  0 
+   EM iteration: 21 , Change in fdr fit =  0 
+   EM iteration: 22 , Change in fdr fit =  0 
+   EM iteration: 23 , Change in fdr fit =  0 
+   EM iteration: 24 , Change in fdr fit =  0 
+   EM iteration: 25 , Change in fdr fit =  0 
+   EM iteration: 26 , Change in fdr fit =  0 
+   EM iteration: 27 , Change in fdr fit =  0 
+   EM iteration: 28 , Change in fdr fit =  0 
+   EM iteration: 29 , Change in fdr fit =  0 
+   EM iteration: 30 , Change in fdr fit =  0 
+   
+params_S <- SpMix(pathways[,4], p_value = TRUE, tol = 1e-10)
+
+> params_S <- SpMix(pathways[,4], p_value = TRUE, tol = 1e-10)
+   EM iteration: 1 , Change in fdr fit =  0 
+   EM iteration: 2 , Change in fdr fit =  0 
+   EM iteration: 3 , Change in fdr fit =  0 
+   EM iteration: 4 , Change in fdr fit =  0 
+   EM iteration: 5 , Change in fdr fit =  0 
+   EM iteration: 6 , Change in fdr fit =  0 
+   EM iteration: 7 , Change in fdr fit =  0 
+   EM iteration: 8 , Change in fdr fit =  0 
+   EM iteration: 9 , Change in fdr fit =  0 
+   EM iteration: 10 , Change in fdr fit =  0 
+   EM iteration: 11 , Change in fdr fit =  0 
+   EM iteration: 12 , Change in fdr fit =  0 
+   EM iteration: 13 , Change in fdr fit =  0 
+   EM iteration: 14 , Change in fdr fit =  0 
+   EM iteration: 15 , Change in fdr fit =  0 
+   EM iteration: 16 , Change in fdr fit =  0 
+   EM iteration: 17 , Change in fdr fit =  0 
+   EM iteration: 18 , Change in fdr fit =  0 
+   EM iteration: 19 , Change in fdr fit =  0 
+   EM iteration: 20 , Change in fdr fit =  0 
+   EM iteration: 21 , Change in fdr fit =  0 
+   EM iteration: 22 , Change in fdr fit =  0 
+   EM iteration: 23 , Change in fdr fit =  0 
+   EM iteration: 24 , Change in fdr fit =  0 
+   EM iteration: 25 , Change in fdr fit =  0 
+   EM iteration: 26 , Change in fdr fit =  0 
+   EM iteration: 27 , Change in fdr fit =  0 
+   EM iteration: 28 , Change in fdr fit =  0 
+   EM iteration: 29 , Change in fdr fit =  0 
+   EM iteration: 30 , Change in fdr fit =  0 
+   
+```
+
+```{r, eval=FALSE}
+## Plot results for each pathway
+plotFDR(pathways[,2], params_L$p0, params_L$mu0, params_L$sig0, params_L$f1, 
+        params_L$localFDR, p_value = TRUE)
+plotFDR(pathways[,3], params_O$p0, params_O$mu0, params_O$sig0, params_O$f1, 
+        params_O$localFDR, p_value = TRUE)
+plotFDR(pathways[,4], params_S$p0, params_S$mu0, params_S$sig0, params_S$f1, 
+        params_S$localFDR, p_value = TRUE)
+```
+
+```{r, eval=FALSE}
+## SpMix for 3-dimensional data
+params_LOS <- SpMix(pathways[,2:4], p_value = TRUE)
+```
+
+```{r, eval=FALSE}
+## SpMix for each pathway
+params_LOS <- SpMix(pathways[,2], p_value = TRUE, tol = 1e-10)
 ```
 
 ### Galaxy Velocity
