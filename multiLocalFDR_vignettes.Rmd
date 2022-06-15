@@ -130,7 +130,7 @@ plotSPMix(z_NG1d, NG1d$p0, NG1d$mu0, NG1d$sig0, NG1d$f, NG1d$f1, NG1d$localFDR,
 ### Normal + Gaussian Copula
 
 ```{r}
-
+n <- 3000
 n0 <- rbinom(1, n, p0)
 n1 <- n - n0
 sig0 <- matrix(c(1, 0.25, 0.25, 1), ncol = 2, byrow = T)
