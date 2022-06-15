@@ -1,0 +1,245 @@
+"","Gene.Set","L","O","S","localFDR","sgnf"
+"1","Neutrophil degranulation(R)",3.14e-13,3.28e-09,1.11e-16,9.79754614919532e-18,TRUE
+"2","Antimicrobial peptides(R)",7.69e-06,0.00114,0.00131,0.000497800267301204,TRUE
+"3","Toll-Like Receptors Cascades(R)",1.85e-05,0.00339,0.000278,0.000939629274681008,TRUE
+"4","Signaling by Interleukins(R)",8.91e-05,1.88e-05,8.24e-08,2.64485700715456e-06,TRUE
+"5","Fructose and mannose metabolism(K)",0.000421,0.2865,0.449,0.0358388324800534,FALSE
+"6","IL4-mediated signaling events(N)",0.000547,0.000504,0.1065,0.00252707264136398,TRUE
+"7","Amoebiasis(K)",0.000597,0.0797,1.42e-05,0.00178802275382883,TRUE
+"8","TNF signaling pathway(K)",0.00108,0.6767,0.000961,0.00178802275382883,TRUE
+"9","Transport of glucose and other sugars, bile salts and organic acids, metal ions and amine compounds(R)",0.00112,0.01,0.5403,0.0148322266263968,FALSE
+"10","Growth hormone receptor signaling(R)",0.0021,0.2176,0.3517,0.165816107902966,FALSE
+"11","IL2-mediated signaling events(N)",0.00255,0.0183,0.0751,0.156442096470424,FALSE
+"12","Metabolism of carbohydrates(R)",0.00312,0.4261,0.6075,0.165816107902966,FALSE
+"13","Insulin signaling pathway(K)",0.00358,0.4194,0.7198,0.165816107902966,FALSE
+"14","Hematopoietic cell lineage(K)",0.00359,0.2608,7.87e-05,0.00427447205873271,TRUE
+"15","Validated targets of C-MYC transcriptional repression(N)",0.00371,0.1258,0.2945,0.275689816038326,FALSE
+"16","IL12-mediated signaling events(N)",0.00393,0.1292,0.00527,0.116485371131203,FALSE
+"17","toll-like receptor pathway(B)",0.0047,0.2792,0.00286,0.0485606580156221,FALSE
+"18","Inflammatory bowel disease (IBD)(K)",0.00491,0.00058,0.031,0.0105687769999429,FALSE
+"19","EPO signaling pathway(N)",0.00511,0.2865,0.449,0.275689816038326,FALSE
+"20","Toll-like receptor signaling pathway(K)",0.00519,0.0238,2.75e-05,0.00859782474033446,TRUE
+"21","IL1-mediated signaling events(N)",0.00555,0.2938,0.0242,0.143419625871431,FALSE
+"22","signal transduction through il1r(B)",0.00601,0.301,0.0261,0.151154223499259,FALSE
+"23","Cytokine-cytokine receptor interaction(K)",0.00666,0.000408,7.78e-06,0.000606270723376754,TRUE
+"24","IL23-mediated signaling events(N)",0.00699,0.3152,0.03,0.316285380100238,FALSE
+"25","GMCSF-mediated signaling events(N)",0.00699,0.0555,0.03,0.316285380100238,FALSE
+"26","RET signaling(R)",0.00876,0.3961,0.5693,0.316285380100238,FALSE
+"27","Osteoclast differentiation(K)",0.0126,0.3909,6.19e-12,5.77402081228898e-09,TRUE
+"28","Syndecan-1-mediated signaling events(N)",0.0138,0.1595,0.2642,0.495574046000234,FALSE
+"29","Angiopoietin receptor Tie2-mediated signaling(N)",0.0157,0.0931,0.2281,0.495870840611205,FALSE
+"30","Mineral absorption(K)",0.0174,0.0166,0.2414,0.225116267657414,FALSE
+"31","Signaling by Leptin(R)",0.0224,0.3601,0.3258,0.528125209540413,FALSE
+"32","Platelet homeostasis(R)",0.0241,0.00328,0.656,0.0109970648348435,FALSE
+"33","nfkb activation by nontypeable hemophilus influenzae(B)",0.0263,0.2176,0.0704,0.510320037046732,FALSE
+"34","VEGFR3 signaling in lymphatic endothelium(N)",0.0283,0.0274,0.0755,0.392720831399352,FALSE
+"35","S1P3 pathway(N)",0.0283,0.2256,0.3633,0.591041204326242,FALSE
+"36","Endogenous TLR signaling(N)",0.0283,0.2256,0.000102,0.0154656457511532,FALSE
+"37","Signaling events mediated by VEGFR1 and VEGFR2(N)",0.0285,0.1361,0.6801,0.495870840611205,FALSE
+"38","Signaling by VEGF(R)",0.0307,0.5642,0.2624,0.510320037046732,FALSE
+"39","BCR signaling pathway(N)",0.0308,0.4862,0.031,0.316285380100238,FALSE
+"40","cGMP-PKG signaling pathway(K)",0.0315,0.2464,0.5853,0.591041204326242,FALSE
+"41","Signaling by SCF-KIT(R)",0.0322,0.1761,0.6018,0.553819689265518,FALSE
+"42","VEGFR1 specific signals(N)",0.0326,0.2413,0.3859,0.608803835453167,FALSE
+"43","Central carbon metabolism in cancer(K)",0.0333,0.4967,0.3406,0.567715183394721,FALSE
+"44","NCAM signaling for neurite out-growth(R)",0.0341,0.6859,0.6007,0.608803835453167,FALSE
+"45","Toxoplasmosis(K)",0.0353,0.1207,0.00597,0.282555765730926,FALSE
+"46","Osteopontin-mediated events(N)",0.0371,0.0359,0.00201,0.162241892647634,FALSE
+"47","Adipocytokine signaling pathway(K)",0.0371,0.5119,0.1338,0.510320037046732,FALSE
+"48","Tuberculosis(K)",0.0396,0.00252,3.79e-08,6.07148873971299e-05,TRUE
+"49","Transcriptional misregulation in cancer(K)",0.0404,0.5506,0.00175,0.0352950737837653,FALSE
+"50","AMPK signaling pathway(K)",0.0411,0.3618,0.6559,0.608803835453167,FALSE
+"51","Leishmaniasis(K)",0.0412,0.1715,1.22e-09,4.80013640239325e-06,TRUE
+"52","Pertussis(K)",0.0454,0.0435,8.36e-05,0.0248110142405206,FALSE
+"53","Trk receptor signaling mediated by the MAPK pathway(N)",0.0467,0.2865,0.1201,0.613554943761794,FALSE
+"54","MAPK signaling pathway(K)",0.0508,0.7372,0.0182,0.282555765730926,FALSE
+"55","FoxO signaling pathway(K)",0.0519,0.7477,0.4354,0.613554943761794,FALSE
+"56","CXCR3-mediated signaling events(N)",0.0519,0.301,0.4686,0.656785485060185,FALSE
+"57","RAF/MAP kinase cascade(R)",0.0594,0.6108,0.4914,0.664555461570004,FALSE
+"58","Bladder cancer(K)",0.0684,0.0664,0.0388,0.508763778509575,FALSE
+"59","Signaling by Insulin receptor(R)",0.0698,0.3141,0.738,0.702412432539128,FALSE
+"60","NF-kappa B signaling pathway(K)",0.0773,0.2533,0.000373,0.0386587336094271,FALSE
+"61","il-2 receptor beta chain in t cell activation(B)",0.0773,0.075,0.1888,0.607161008805261,FALSE
+"62","Endocrine resistance(K)",0.083,0.6342,0.1027,0.510320037046732,FALSE
+"63","FGF signaling pathway(N)",0.0865,0.00145,0.00175,0.012019986119719,FALSE
+"64","IL6-mediated signaling events(N)",0.0865,0.3819,0.00175,0.074194316453247,FALSE
+"65","Estrogen signaling pathway(K)",0.0869,0.2722,0.0359,0.511232642819041,FALSE
+"66","Ras signaling pathway(K)",0.0914,0.906,0.5938,0.669328473212651,FALSE
+"67","Chagas disease (American trypanosomiasis)(K)",0.095,0.2873,0.012,0.328027169864096,FALSE
+"68","Gastrin-CREB signalling pathway via PKC and MAPK(R)",0.0978,0.3395,0.2402,0.747392163897583,FALSE
+"69","Th17 cell differentiation(K)",0.1012,0.00501,0.576,0.0305131334620255,FALSE
+"70","NOD-like receptor signaling pathway(K)",0.102,0.0308,0.0891,0.419818996891644,FALSE
+"71","Insulin resistance(K)",0.1055,0.026,0.3141,0.341582959454472,FALSE
+"72","Legionellosis(K)",0.1124,0.0192,8.66e-06,0.00299150664188524,TRUE
+"73","Non-small cell lung cancer(K)",0.1158,0.4364,0.2679,0.766165425183814,FALSE
+"74","Acute myeloid leukemia(K)",0.1192,0.4422,0.2746,0.76950445661698,FALSE
+"75","ER to Golgi Anterograde Transport(R)",0.1232,0.6993,0.6245,0.799689120041561,FALSE
+"76","B cell activation(P)",0.126,0.4535,0.0228,0.386269602242343,FALSE
+"77","Signaling by Type 1 Insulin-like Growth Factor 1 Receptor (IGF1R)(R)",0.1276,0.4845,0.6773,0.775785548995365,FALSE
+"78","Signaling by PDGF(R)",0.1277,0.1201,0.38,0.675768073870531,FALSE
+"79","Herpes simplex infection(K)",0.1278,0.2932,0.2431,0.759318930160885,FALSE
+"80","Neurotrophin signaling pathway(K)",0.1324,0.3508,0.8886,0.812735524313377,FALSE
+"81","Ras signaling in the CD4+ TCR pathway(N)",0.1356,0.1333,0.0269,0.492096632490348,FALSE
+"82","Ras Pathway(P)",0.14,0.4755,0.6801,0.783925452584379,FALSE
+"83","Arf6 downstream pathway(N)",0.1445,0.1421,0.2372,0.694295410420041,FALSE
+"84","Interferon-gamma signaling pathway(P)",0.1445,0.1421,0.2372,0.694295410420041,FALSE
+"85","HIF-1-alpha transcription factor network(N)",0.1471,0.143,0.00684,0.286603975368926,FALSE
+"86","Signalling by NGF(R)",0.1496,0.1402,0.8795,0.675768073870531,FALSE
+"87","Renal cell carcinoma(K)",0.1543,0.4967,0.7024,0.792551448582776,FALSE
+"88","Focal adhesion(K)",0.1579,0.1509,0.0305,0.49959186708964,FALSE
+"89","Direct p53 effectors(N)",0.159,0.1532,0.0336,0.513456873126722,FALSE
+"90","Hepatitis C(K)",0.1615,0.3945,0.6932,0.79828752186831,FALSE
+"91","Fc epsilon RI signaling pathway(K)",0.1652,0.5119,0.00184,0.074194316453247,FALSE
+"92","Proteoglycans in cancer(K)",0.1658,0.0597,0.000105,0.0248110142405206,FALSE
+"93","Ubiquitin mediated proteolysis(K)",0.1716,0.7554,0.9168,0.831005802775971,FALSE
+"94","Adherens junction(K)",0.1726,0.5219,0.7283,0.805699531535417,FALSE
+"95","Apoptosis(K)",0.1793,0.7629,0.1109,0.513456873126722,FALSE
+"96","Rap1 signaling pathway(K)",0.18,0.3684,0.00552,0.198824882948352,FALSE
+"97","O-linked glycosylation(R)",0.1837,0.5364,0.7427,0.812913921340794,FALSE
+"98","Asparagine N-linked glycosylation(R)",0.1945,0.6574,0.907,0.861164004805875,FALSE
+"99","Hepatitis B(K)",0.1949,0.1881,0.00538,0.245357306430777,FALSE
+"100","igf-1 signaling pathway(B)",0.1963,0.1932,0.3155,0.723282351251915,FALSE
+"101","Complement and coagulation cascades(K)",0.1987,0.0478,2.7e-07,0.000232285045116936,TRUE
+"102","Adrenergic signaling in cardiomyocytes(K)",0.2028,0.4507,0.9332,1,FALSE
+"103","ccr3 signaling in eosinophils(B)",0.2047,0.2014,0.3278,0.726206960461041,FALSE
+"104","T cell activation(P)",0.2063,0.5642,0.0601,0.542509755500919,FALSE
+"105","C-MYB transcription factor network(N)",0.21,0.5686,0.4357,0.845071491649872,FALSE
+"106","L1CAM interactions(R)",0.21,0.5686,0.7734,0.845071491649872,FALSE
+"107","Signaling events mediated by PRL(N)",0.2129,0.2096,0.3398,0.730187319914368,FALSE
+"108","corticosteroids and cardioprotection(B)",0.2211,0.2176,0.3517,0.735707581094209,FALSE
+"109","Alpha9 beta1 integrin signaling events(N)",0.2211,0.002,0.0097,0.0124198635908709,FALSE
+"110","Jak-STAT signaling pathway(K)",0.2271,0.00585,0.0681,0.0628601519779892,FALSE
+"111","ras-independent pathway in nk cell-mediated cytotoxicity(B)",0.2291,0.2256,0.3633,0.741798780031556,FALSE
+"112","Pathways in cancer(K)",0.2326,0.7753,0.1063,0.542509755500919,FALSE
+"113","Signaling by EGFR(R)",0.2348,0.2241,0.8259,0.781507921126948,FALSE
+"114","IL3-mediated signaling events(N)",0.2371,0.2335,0.0807,0.648177307962972,FALSE
+"115","RXR and RAR heterodimerization with other nuclear receptor(N)",0.2371,0.2335,0.3747,0.747406840417504,FALSE
+"116","Protein digestion and absorption(K)",0.2406,0.6027,0.8041,0.852623051410457,FALSE
+"117","Rheumatoid arthritis(K)",0.2406,0.00242,0.0062,0.012019986119719,FALSE
+"118","DAP12 interactions(R)",0.2464,0.0482,0.3653,0.419818996891644,FALSE
+"119","FGF signaling pathway(P)",0.2482,0.242,0.4949,0.763587536630991,FALSE
+"120","Th1 and Th2 cell differentiation(K)",0.2482,0.0688,0.8111,0.508763778509575,FALSE
+"121","GnRH signaling pathway(K)",0.2482,0.6108,0.4949,0.864456940585452,FALSE
+"122","role of ÃŸ-arrestins in the activation and targeting of map kinases(B)",0.2529,0.0337,0.0146,0.188598926917568,FALSE
+"123","Progesterone-mediated oocyte maturation(K)",0.2713,0.6342,0.8306,0.867080252803394,FALSE
+"124","Influenza A(K)",0.2743,0.2656,0.0148,0.364029937979738,FALSE
+"125","Inflammatory mediator regulation of TRP channels(K)",0.2751,0.2684,0.2653,0.762260403476317,FALSE
+"126","amb2 Integrin signaling(N)",0.2759,0.0405,1.9e-06,0.000560954299438508,TRUE
+"127","Axon guidance(K)",0.2799,0.5415,0.2169,0.7987105139852,FALSE
+"128","HTLV-I infection(K)",0.2813,0.1252,0.0972,0.571022912240524,FALSE
+"129","PI3K-Akt signaling pathway(K)",0.2818,0.024,0.1655,0.23002092586164,FALSE
+"130","AGE-RAGE signaling pathway in diabetic complications(K)",0.2828,0.6453,0.0106,0.286603975368926,FALSE
+"131","Retrograde endocannabinoid signaling(K)",0.2828,0.6453,0.5447,0.87676951913197,FALSE
+"132","Syndecan-4-mediated signaling events(N)",0.2834,0.00447,0.000318,0.00391211718457997,TRUE
+"133","ROS, RNS production in phagocytes(R)",0.2834,0.0429,0.0207,0.223673135051467,FALSE
+"134","roles of ÃŸ arrestin dependent recruitment of src kinases in gpcr signaling(B)",0.2834,0.0429,0.00286,0.162241892647634,FALSE
+"135","Syndecan-2-mediated signaling events(N)",0.2834,0.2792,0.439,0.77188286107633,FALSE
+"136","Endocytosis(K)",0.2859,0.0511,0.3291,0.419818996891644,FALSE
+"137","Chemokine signaling pathway(K)",0.3082,0.0127,1.97e-06,0.000267799305463685,TRUE
+"138","Class I MHC mediated antigen processing & presentation(R)",0.3138,0.8574,0.2565,0.7987105139852,FALSE
+"139","Validated transcriptional targets of AP1 family members Fra1 and Fra2(N)",0.3198,0.3152,0.000612,0.0444945058641113,FALSE
+"140","ErbB2/ErbB3 signaling events(N)",0.3198,0.3152,0.4875,0.786578983317857,FALSE
+"141","nfat and hypertrophy of the heart (B)",0.3198,0.3152,0.4875,0.786578983317857,FALSE
+"142","PIP3 activates AKT signaling(R)",0.3211,0.3136,0.5959,0.777767154469656,FALSE
+"143","Serotonergic synapse(K)",0.3287,0.3211,0.1489,0.727384223959418,FALSE
+"144","Formation of Fibrin Clot (Clotting Cascade)(R)",0.3339,0.3291,0.5057,0.79262298561522,FALSE
+"145","Leukocyte transendothelial migration(K)",0.34,0.00698,0.000294,0.00384443996893035,TRUE
+"146","IFN-gamma pathway(N)",0.3408,0.3359,0.5146,0.795565924082919,FALSE
+"147","FOXM1 transcription factor network(N)",0.3408,0.3359,0.5146,0.795565924082919,FALSE
+"148","Plasma membrane estrogen receptor signaling(N)",0.3544,0.3494,0.1759,0.745120590579309,FALSE
+"149","Urokinase-type plasminogen activator (uPA) and uPAR-mediated signaling(N)",0.3544,0.00939,9.81e-08,6.07148873971299e-05,TRUE
+"150","PDGFR-beta signaling pathway(N)",0.3551,0.1252,0.1728,0.604182098815602,FALSE
+"151","Sphingolipid signaling pathway(K)",0.3551,0.7085,0.1728,0.746137271038818,FALSE
+"152","Vascular smooth muscle contraction(K)",0.3588,0.7114,0.8886,1,FALSE
+"153","ion channels and their functional role in vascular endothelium(B)",0.3611,0.0721,0.0436,0.508763778509575,FALSE
+"154","Platelet activation(K)",0.3626,0.7144,0.0071,0.286603975368926,FALSE
+"155","Lysosome(K)",0.3663,0.3582,0.6516,0.80463359445604,FALSE
+"156","ABC transporters(K)",0.3743,0.0779,0.5566,0.607161008805261,FALSE
+"157","Carbohydrate digestion and absorption(K)",0.3808,0.3755,0.2018,0.757934523331433,FALSE
+"158","Regulation of actin cytoskeleton(K)",0.3846,0.1763,0.0164,0.324445112466752,FALSE
+"159","Integrins in angiogenesis(N)",0.3872,0.0127,0.2083,0.0817282504742808,FALSE
+"160","Endocrine and other factor-regulated calcium reabsorption(K)",0.3872,0.0839,0.5724,0.607161008805261,FALSE
+"161","Amyloid fiber formation(R)",0.3872,0.3819,0.5724,0.811477074579293,FALSE
+"162","Dopaminergic synapse(K)",0.3922,0.3837,0.6811,0.818039640536144,FALSE
+"163","t cell receptor signaling pathway(B)",0.3936,0.3882,0.0569,0.561439356739459,FALSE
+"164","GPVI-mediated activation cascade(R)",0.3999,0.00169,0.0021,0.012019986119719,FALSE
+"165","Validated transcriptional targets of TAp63 isoforms(N)",0.3999,0.3945,0.5876,0.815030194654021,FALSE
+"166","Malaria(K)",0.3999,0.00169,3.77e-06,5.02549704249179e-05,TRUE
+"167","Fc epsilon receptor (FCERI) signaling(R)",0.4131,0.0561,0.5982,0.419818996891644,FALSE
+"168","Senescence-Associated Secretory Phenotype (SASP)(R)",0.4184,0.0994,0.6094,0.607161008805261,FALSE
+"169","Signaling events mediated by PTP1B(N)",0.4184,0.4128,0.0151,0.364029937979738,FALSE
+"170","Thromboxane A2 receptor signaling(N)",0.4305,0.4248,0.0751,0.593526151016946,FALSE
+"171","Signaling pathways regulating pluripotency of stem cells(K)",0.4354,0.7678,0.9241,1,FALSE
+"172","Interleukin signaling pathway(P)",0.4364,0.0192,0.0182,0.0552533679277985,FALSE
+"173","Transport of inorganic cations/anions and amino acids/oligopeptides(R)",0.4364,0.4306,0.2613,0.787644232434694,FALSE
+"174","Endothelin signaling pathway(P)",0.4364,0.4306,0.2613,0.787644232434694,FALSE
+"175","PI Metabolism(R)",0.4595,0.1224,0.656,0.675768073870531,FALSE
+"176","Long-term depression(K)",0.4651,0.4591,0.6622,0.839338237553293,FALSE
+"177","Signaling by PTK6(R)",0.4706,0.4646,0.0991,0.648177307962972,FALSE
+"178","Fc-epsilon receptor I signaling in mast cells(N)",0.4762,0.1326,0.000152,0.0248110142405206,FALSE
+"179","Phagosome(K)",0.4769,0.0213,2.88e-08,6.26118843520428e-06,TRUE
+"180","mTOR signaling pathway(K)",0.4769,0.7949,0.5265,1,FALSE
+"181","LPA receptor mediated events(N)",0.4816,0.4755,0.1065,0.648177307962972,FALSE
+"182","Downstream signaling in naïve CD8+ T cells(N)",0.487,0.1395,0.0295,0.492096632490348,FALSE
+"183","Integrin signalling pathway(P)",0.4903,0.0235,0.0255,0.0628768589190981,FALSE
+"184","Fcgamma receptor (FCGR) dependent phagocytosis(R)",0.4937,0.0807,0.1617,0.508763778509575,FALSE
+"185","Extracellular matrix organization(R)",0.4964,0.00127,0.000251,0.000606270723376754,TRUE
+"186","Long-term potentiation(K)",0.5028,0.15,0.7024,0.694295410420041,FALSE
+"187","TCR signaling in naïve CD4+ T cells(N)",0.5028,0.15,0.00774,0.286603975368926,FALSE
+"188","Interferon alpha/beta signaling(R)",0.508,0.033,0.1258,0.419818996891644,FALSE
+"189","Epithelial cell signaling in Helicobacter pylori infection(K)",0.508,0.1536,0.1258,0.579280143057869,FALSE
+"190","Protein processing in endoplasmic reticulum(K)",0.5133,0.817,0.9502,1,FALSE
+"191","AP-1 transcription factor network(N)",0.5182,0.0355,0.000316,0.00859782474033446,TRUE
+"192","Inflammation mediated by chemokine and cytokine signaling pathway(P)",0.5232,0.1643,0.00977,0.286603975368926,FALSE
+"193","Arrhythmogenic right ventricular cardiomyopathy (ARVC)(K)",0.5282,0.5219,0.373,0.836598743550499,FALSE
+"194","B cell receptor signaling pathway(K)",0.5331,0.5268,0.00227,0.162241892647634,FALSE
+"195","Interferon gamma signaling(R)",0.5331,0.0069,0.7332,0.0628601519779892,FALSE
+"196","Chronic myeloid leukemia(K)",0.5331,0.5268,0.7332,0.8533453556583,FALSE
+"197","Platinum drug resistance(K)",0.5428,0.5364,0.7427,0.854571448039134,FALSE
+"198","Validated targets of C-MYC transcriptional activation(N)",0.5428,0.1788,0.7427,0.694295410420041,FALSE
+"199","p73 transcription factor network(N)",0.5428,0.5364,0.3922,0.845133500405826,FALSE
+"200","Regulation of nuclear SMAD2/3 signaling(N)",0.5523,0.5458,0.7519,0.855722182263469,FALSE
+"201","RIG-I/MDA5 mediated induction of IFN-alpha/beta pathways(R)",0.5523,0.5458,0.7519,0.855722182263469,FALSE
+"202","Bacterial invasion of epithelial cells(K)",0.5569,0.5505,0.1676,0.742408527363795,FALSE
+"203","Regulation of nuclear beta catenin signaling and target gene transcription(N)",0.5661,0.5596,0.765,0.860327295658043,FALSE
+"204","CXCR4-mediated signaling events(N)",0.5661,0.00943,0.0156,0.0139863945179446,FALSE
+"205","Signaling events mediated by Hepatocyte Growth Factor Receptor (c-Met)(N)",0.5661,0.1971,0.765,0.723282351251915,FALSE
+"206","ECM-receptor interaction(K)",0.5751,0.0523,0.0623,0.223673135051467,FALSE
+"207","Peroxisome(K)",0.5795,0.573,0.4418,0.863917095194196,FALSE
+"208","Hypertrophic cardiomyopathy (HCM)(K)",0.5795,0.573,0.7775,0.86495969028983,FALSE
+"209","Generic Transcription Pathway(R)",0.5877,0.8849,0.8844,1,FALSE
+"210","GPCR ligand binding(R)",0.5911,0.378,0.013,0.328027169864096,FALSE
+"211","Gap junction(K)",0.601,0.5945,0.7968,0.875184984583583,FALSE
+"212","Fatty acid, triacylglycerol, and ketone body metabolism(R)",0.6039,0.5942,0.6848,0.883186783505375,FALSE
+"213","MicroRNAs in cancer(K)",0.6042,0.9548,0.2959,0.7987105139852,FALSE
+"214","EPH-Ephrin signaling(R)",0.6052,0.5986,0.8005,0.883186783505375,FALSE
+"215","Dilated cardiomyopathy(K)",0.6093,0.6027,0.8041,0.883186783505375,FALSE
+"216","Salivary secretion(K)",0.6093,0.2345,0.8041,0.747406840417504,FALSE
+"217","Epstein-Barr virus infection(K)",0.6285,0.6188,0.3082,0.840059966188019,FALSE
+"218","Circadian entrainment(K)",0.6331,0.6265,0.5175,0.886149431940495,FALSE
+"219","Response to elevated platelet cytosolic Ca2+(R)",0.6697,0.0952,4.5e-06,0.000560954299438508,TRUE
+"220","Heterotrimeric G-protein signaling pathway-Gq alpha and Go alpha mediated pathway(P)",0.6765,0.67,0.1327,0.715250118045144,FALSE
+"221","Alzheimer disease-presenilin pathway(P)",0.6866,0.6801,0.5959,1,FALSE
+"222","Cholinergic synapse(K)",0.6866,0.6801,0.3239,0.859958490635601,FALSE
+"223","Glutamatergic synapse(K)",0.6963,0.6898,0.8734,1,FALSE
+"224","TCR signaling(R)",0.7237,0.132,0.3826,0.675768073870531,FALSE
+"225","Binding and Uptake of Ligands by Scavenger Receptors(R)",0.7266,0.3618,0.3874,0.876614154056121,FALSE
+"226","Complement cascade(R)",0.7351,0.0418,0.4019,0.419818996891644,FALSE
+"227","Natural killer cell mediated cytotoxicity(K)",0.7565,0.0503,0.000862,0.0248110142405206,FALSE
+"228","Measles(K)",0.759,0.00284,0.0123,0.0124198635908709,FALSE
+"229","Intra-Golgi and retrograde Golgi-to-ER traffic(R)",0.7714,0.7653,0.9227,1,FALSE
+"230","Signaling by the B Cell Receptor (BCR)(R)",0.7741,0.00668,0.8672,0.0628601519779892,FALSE
+"231","Phospholipase D signaling pathway(K)",0.7785,0.4334,0.1209,0.769654548435992,FALSE
+"232","Cell adhesion molecules (CAMs)(K)",0.7808,0.4369,0.049,0.582220025720863,FALSE
+"233","Heterotrimeric G-protein signaling pathway-Gi alpha and Gs alpha mediated pathway(P)",0.7854,0.7795,0.4955,1,FALSE
+"234","Oxytocin signaling pathway(K)",0.8109,0.8053,0.1617,0.769654548435992,FALSE
+"235","Ion channel transport(R)",0.8299,0.2491,0.9537,0.781507921126948,FALSE
+"236","Alzheimer's disease(K)",0.8334,0.5229,0.8154,1,FALSE
+"237","Calcium signaling pathway(K)",0.8517,0.1168,0.6393,0.607161008805261,FALSE
+"238","Metabolic pathways(K)",0.8607,0.9919,0.999999,1,FALSE
+"239","Signaling by Rho GTPases(R)",0.8608,0.4365,0.3858,1,FALSE
+"240","Viral carcinogenesis(K)",0.8813,0.8767,0.7107,1,FALSE
+"241","Cell surface interactions at the vascular wall(R)",0.8874,5.86e-05,0.000449,2.64485700715456e-06,TRUE
+"242","GPCR downstream signaling(R)",0.9214,0.4601,0.1026,0.745898323102024,FALSE
+"243","Neuroactive ligand-receptor interaction(K)",0.9465,0.9437,0.5643,1,FALSE
+"244","Olfactory transduction(K)",0.9881,0.9871,0.9959,1,FALSE
