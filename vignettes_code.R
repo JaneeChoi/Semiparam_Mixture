@@ -24,28 +24,58 @@ p0 <- 0.8
 n0 <- rbinom(1, n, p0)
 n1 <- n - n0
 z0 <- rnorm(n0)
-z1 <- rnorm(n1, mean = 3.5, sd = 0.5)
+z1 <- rnorm(n1, mean = 5, sd = 0.5)
 z_NN1d <- c(z0, z1)
 
-NN1d <- SPMix(z_NN1d)
+NN1d <- SPMix(z_NN1d, thre_z = 1-1e-10)
+
+save.image("/Users/user/Documents/NN1d_new.RData")
+
+z1_gamma <- rgamma(n1, shape = 12, rate = 4)
+z_NG1d <- c(z0, z1_gamma)
+
+NG1d <- SPMix(z_NG1d,thre_z = 1-1e-10)
+
+save.image("/Users/user/Documents/NG1d_new.RData")
+
+
 str(NN1d)
 
 # Hypothesis testing 
-plotSPMix(z_NN1d, NN1d$p0, NN1d$mu0, NN1d$sig0, NN1d$f, NN1d$f1, NN1d$localFDR)
+p1<-plotSPMix(z_NN1d, NN1d$p0, NN1d$mu0, NN1d$sig0, NN1d$f, NN1d$f1, NN1d$localFDR)
+
+p1
+f = 0.8*dnorm(z_NN1d) + 0.2*dnorm(z_NN1d,mean=5,sd=0.5)
+
+
+p1 +
+  geom_line(aes(sort(z_NN1d),f[order(z_NN1d)]),color = "gray30", lwd=1)
+
 
 # Density Estimation
-plotSPMix(z_NN1d, NN1d$p0, NN1d$mu0, NN1d$sig0, NN1d$f, NN1d$f1, NN1d$localFDR,
+p2<-plotSPMix(z_NN1d, NN1d$p0, NN1d$mu0, NN1d$sig0, NN1d$f, NN1d$f1, NN1d$localFDR,
           testing = FALSE)
+
+p2 +
+  geom_line(aes(sort(z_NN1d),f[order(z_NN1d)]),color = "gray30", lwd=1)
+
 
 ### Normal + Gamma
 
 z1_gamma <- rgamma(n1, shape = 12, rate = 4)
 z_NG1d <- c(z0, z1_gamma)
 
-NG1d <- SPMix(z_NG1d)
+NG1d <- SPMix(z_NG1d,thre_z = 1-1e-10)
 
 # Hypothesis testing 
-plotSPMix(z_NG1d, NG1d$p0, NG1d$mu0, NG1d$sig0, NG1d$f, NG1d$f1, NG1d$localFDR)
+p2<-plotSPMix(z_NG1d, NG1d$p0, NG1d$mu0, NG1d$sig0, NG1d$f, NG1d$f1, NG1d$localFDR)
+
+f_NG = 0.8*dnorm(z_NG1d) + 0.2*dgamma(z_NG1d,shape = 12, rate = 4)
+
+
+p2 +
+  geom_line(aes(sort(z_NG1d),f_NG[order(z_NG1d)]),color = "gray25", lwd=1.1)
+
 
 # Density Estimation
 plotSPMix(z_NG1d, NG1d$p0, NG1d$mu0, NG1d$sig0, NG1d$f, NG1d$f1, NG1d$localFDR,
@@ -159,7 +189,6 @@ head(pathways[params_LOS$localFDR <= 0.01,]$Gene.Set)
 length(pathways[params_LOS$localFDR <= 0.01,]$Gene.Set)
 
 ### 3d scatter plot 
-
 
 plotSPMix(pathways[,2:4], params_LOS$p0, params_LOS$mu0, params_LOS$sig0, params_LOS$f, params_LOS$f1,
           params_LOS$localFDR, p_value = TRUE, thre_localFDR = 0.01, xlab = "Peripheral Leukocytes",
