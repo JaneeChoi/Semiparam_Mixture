@@ -7,6 +7,7 @@ library(copula)
 library(mvtnorm)
 library(ggplot2)
 library(scatterplot3d)
+library(FDRestimation)
 
 library(multiLocalFDR)
 
@@ -24,62 +25,72 @@ p0 <- 0.8
 n0 <- rbinom(1, n, p0)
 n1 <- n - n0
 z0 <- rnorm(n0)
-z1 <- rnorm(n1, mean = 5, sd = 0.5)
+z1 <- rnorm(n1, mean = 3, sd = 0.5)
 z_NN1d <- c(z0, z1)
 
-NN1d <- SPMix(z_NN1d, thre_z = 1-1e-10)
-
-save.image("/Users/user/Documents/NN1d_new.RData")
-
-z1_gamma <- rgamma(n1, shape = 12, rate = 4)
-z_NG1d <- c(z0, z1_gamma)
-
-NG1d <- SPMix(z_NG1d,thre_z = 1-1e-10)
-
-save.image("/Users/user/Documents/NG1d_new.RData")
-
-
+NN1d <- SPMix(z_NN1d)
 str(NN1d)
 
+save.image("/Users/user/Documents/NN1d_0720.RData")
+
 # Hypothesis testing 
-p1<-plotSPMix(z_NN1d, NN1d$p0, NN1d$mu0, NN1d$sig0, NN1d$f, NN1d$f1, NN1d$localFDR)
-
-p1
-f = 0.8*dnorm(z_NN1d) + 0.2*dnorm(z_NN1d,mean=5,sd=0.5)
-
-
-p1 +
-  geom_line(aes(sort(z_NN1d),f[order(z_NN1d)]),color = "gray30", lwd=1)
-
+plotSPMix(z_NN1d, NN1d$p0, NN1d$mu0, NN1d$sig0, NN1d$f, NN1d$f1, NN1d$localFDR)
 
 # Density Estimation
-p2<-plotSPMix(z_NN1d, NN1d$p0, NN1d$mu0, NN1d$sig0, NN1d$f, NN1d$f1, NN1d$localFDR,
+DE_NN1d<-plotSPMix(z_NN1d, NN1d$p0, NN1d$mu0, NN1d$sig0, NN1d$f, NN1d$f1, NN1d$localFDR,
           testing = FALSE)
 
-p2 +
-  geom_line(aes(sort(z_NN1d),f[order(z_NN1d)]),color = "gray30", lwd=1)
+f_NN1d = p0*dnorm(z_NN1d) + (1-p0)*dnorm(z_NN1d, mean=3, sd=0.5)
+DE_NN1d + geom_line(aes(sort(z_NN1d),f_NN1d[order(z_NN1d)]),color = "gray30", lwd=1)
 
 
 ### Normal + Gamma
 
 z1_gamma <- rgamma(n1, shape = 12, rate = 4)
 z_NG1d <- c(z0, z1_gamma)
-
-NG1d <- SPMix(z_NG1d,thre_z = 1-1e-10)
+NG1d <- SPMix(z_NG1d)
 
 # Hypothesis testing 
-p2<-plotSPMix(z_NG1d, NG1d$p0, NG1d$mu0, NG1d$sig0, NG1d$f, NG1d$f1, NG1d$localFDR)
-
-f_NG = 0.8*dnorm(z_NG1d) + 0.2*dgamma(z_NG1d,shape = 12, rate = 4)
-
-
-p2 +
-  geom_line(aes(sort(z_NG1d),f_NG[order(z_NG1d)]),color = "gray25", lwd=1.1)
-
+plotSPMix(z_NG1d, NG1d$p0, NG1d$mu0, NG1d$sig0, NG1d$f, NG1d$f1, NG1d$localFDR)
 
 # Density Estimation
-plotSPMix(z_NG1d, NG1d$p0, NG1d$mu0, NG1d$sig0, NG1d$f, NG1d$f1, NG1d$localFDR,
-          testing = FALSE)
+DE_NG1d<-plotSPMix(z_NG1d, NG1d$p0, NG1d$mu0, NG1d$sig0, NG1d$f, NG1d$f1, NG1d$localFDR,
+                   testing = FALSE)
+
+f_NG1d = 0.8*dnorm(z_NG1d) + 0.2*dgamma(z_NG1d,shape = 12, rate = 4)
+DE_NG1d + geom_line(aes(sort(z_NG1d),f_NG1d[order(z_NN1d)]),color = "gray30", lwd=1)
+
+
+# FDR check
+
+##compute bh_FDR
+
+bh_NN1d = p.fdr(pvalues = 2*pnorm(-abs(z_NN1d)), adjust.method = "BH")
+
+bh_NN1d
+
+## Normal / Normal
+df = data.frame(z=sort(z_NN1d), FDR = (NN1d$FDR)[order(z_NN1d)], bh_FDR = bh_NN1d$fdrs[order(z_NN1d)], 
+                true_FDR = (p0 * pnorm(z_NN1d) / (p0 * pnorm(z_NN1d) + (1-p0)*pnorm(z_NN1d,3,0.5)))[order(z_NN1d)])
+
+ggplot()+
+  geom_line(data=df,aes(y=FDR,x= z,colour="Our FDR"),size=1 )+
+  geom_line(data=df,aes(y=true_FDR,x= z,colour="True FDR"),size=1) +
+  geom_line(data=df,aes(y=bh_FDR,x= z,colour="BH-FDR"),size=1) +
+  scale_color_manual(name = "FDR", values = c("Our FDR" = "gray20", "BH-FDR" = "#0072B2", "True FDR" = "#0072B2")) +
+  ggtitle("1D Normal / Normal Mixture") +
+  theme_classic()
+
+## Normal / Gamma
+df = data.frame(z=sort(z_NG1d), FDR = (NG1d$FDR)[order(z_NG1d)], 
+                true_FDR = (p0 * pnorm(z_NG1d) / (p0 * pnorm(z_NG1d) + (1-p0)*pgamma(z_NG1d, shape = 12, rate = 4)))[order(z_NG1d)])
+
+ggplot()+
+  geom_line(data=df,aes(y=FDR,x= z,colour="Our FDR"),size=1 )+
+  geom_line(data=df,aes(y=true_FDR,x= z,colour="True FDR"),size=1) +
+  scale_color_manual(name = "FDR", values = c("Our FDR" = "gray20", "True FDR" = "#0072B2")) +
+  ggtitle("1D Normal / Gamma Mixture") +
+  theme_classic()
 
 ## 2-dimensional data
 
